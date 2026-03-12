@@ -6,8 +6,11 @@ interface Lead {
   name: string
   company: string
   email: string
-  status: string
+  phone?: string
+  status: 'New Lead' | 'Contacted' | 'Negotiation' | 'Won' | 'Lost'
   value: number
+  source?: string
+  assignedTo?: string
 }
 
 interface CRMState {
@@ -32,7 +35,7 @@ const crmSlice = createSlice({
       state.loading = action.payload
     },
     addLead: (state, action: PayloadAction<Lead>) => {
-      state.leads.push(action.payload)
+      state.leads.unshift(action.payload)
     },
     updateLead: (state, action: PayloadAction<Lead>) => {
       const index = state.leads.findIndex(l => l.id === action.payload.id)
@@ -40,8 +43,14 @@ const crmSlice = createSlice({
         state.leads[index] = action.payload
       }
     },
+    deleteLead: (state, action: PayloadAction<string>) => {
+      state.leads = state.leads.filter(l => l.id !== action.payload)
+    },
+    reorderLeads: (state, action: PayloadAction<Lead[]>) => {
+      state.leads = action.payload
+    },
   },
 })
 
-export const { setLeads, setLoading, addLead, updateLead } = crmSlice.actions
+export const { setLeads, setLoading, addLead, updateLead, deleteLead, reorderLeads } = crmSlice.actions
 export default crmSlice.reducer

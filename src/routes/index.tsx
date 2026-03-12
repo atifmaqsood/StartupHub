@@ -13,6 +13,8 @@ import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage.tsx'
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage.tsx'
 import TasksPage from '../pages/tasks/index.tsx'
 import TaskDetailsPage from '../pages/tasks/details.tsx'
+import CRMPage from '../pages/crm/index.tsx'
+import LeadDetailsPage from '../pages/crm/details.tsx'
 import ErrorPage from '../pages/ErrorPage.tsx'
 
 // Placeholder components
@@ -79,8 +81,8 @@ export const router = createBrowserRouter([
       {
         element: <DashboardLayout />,
         children: [
-          { index: true, element: <Placeholder name="CRM Pipeline" /> },
-          { path: 'create', element: <Placeholder name="Create Lead" /> },
+          { index: true, element: <CRMPage /> },
+          { path: ':id', element: <LeadDetailsPage /> },
         ]
       }
     ],
