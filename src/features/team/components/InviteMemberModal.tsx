@@ -28,7 +28,7 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, onClose, 
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Invite New Member">
-      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
         <Input
           label="Full Name"
           placeholder="e.g. John Doe"
@@ -37,7 +37,7 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, onClose, 
         />
         
         <Input
-          label="Email Address"
+          label="Neural Email Address"
           type="email"
           placeholder="john@example.com"
           {...register('email', { 
@@ -50,31 +50,31 @@ const InviteMemberModal: React.FC<InviteMemberModalProps> = ({ isOpen, onClose, 
           error={errors.email?.message as string}
         />
 
-        <div className="space-y-1.5">
-          <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-            <Shield className="h-3.5 w-3.5 text-gray-400" />
-            Organizational Role
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1 flex items-center gap-2">
+            <Shield className="h-3.5 w-3.5 opacity-50" />
+            Clearance Level
           </label>
           <select
-            className="w-full h-10 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all"
+            className="w-full h-11 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4 py-2 text-sm font-bold text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:border-[var(--color-primary)] transition-all shadow-sm"
             {...register('role')}
           >
             <option value="Admin">Admin</option>
             <option value="Manager">Manager</option>
             <option value="Member">Member</option>
           </select>
-          <p className="text-[10px] text-gray-400 mt-1 pl-1">
-            New members will receive an email invitation to join the workspace.
+          <p className="text-[10px] text-[var(--text-muted)] mt-2 pl-1 italic opacity-60">
+            Designated operative will receive an activation encrypted link.
           </p>
         </div>
 
-        <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-50">
-          <Button variant="outline" type="button" onClick={onClose} className="h-10 min-w-[80px]">
+        <div className="flex justify-end gap-4 mt-10 pt-6 border-t border-[var(--color-border)]/10">
+          <Button variant="outline" type="button" onClick={onClose} className="rounded-2xl border-[var(--color-border)]/10 text-[10px] font-black uppercase tracking-widest px-8">
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting} className="h-10 min-w-[120px]">
+          <Button type="submit" disabled={isSubmitting} className="rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-[var(--color-primary)]/20">
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Send Invitation
+            Authorize
           </Button>
         </div>
       </form>

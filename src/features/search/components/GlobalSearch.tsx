@@ -21,11 +21,11 @@ const GlobalSearch: React.FC = () => {
     <>
       <div 
         onClick={() => setIsOpen(true)}
-        className="hidden md:flex items-center gap-3 bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-xl border border-gray-100 transition-all cursor-pointer group min-w-[300px]"
+        className="hidden md:flex items-center gap-3 bg-[var(--bg-main)] hover:bg-[var(--bg-card)] px-4 py-2 rounded-xl border border-[var(--color-border)]/10 transition-all cursor-pointer group min-w-[300px]"
       >
-        <Search className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
-        <span className="text-sm text-gray-500 font-medium">Search for anything...</span>
-        <div className="ml-auto flex items-center gap-1 bg-white px-1.5 py-0.5 rounded border border-gray-200 text-[10px] font-bold text-gray-400">
+        <Search className="h-4 w-4 text-[var(--text-muted)] group-hover:text-[var(--color-primary)] transition-colors" />
+        <span className="text-sm text-[var(--text-secondary)] font-medium">Search for anything...</span>
+        <div className="ml-auto flex items-center gap-1 bg-[var(--bg-card)] px-1.5 py-0.5 rounded border border-[var(--color-border)]/20 text-[10px] font-bold text-[var(--text-muted)]">
           <Command className="h-2.5 w-2.5" />
           K
         </div>

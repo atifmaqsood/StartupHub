@@ -1,20 +1,27 @@
 import { Menu } from 'lucide-react'
 import NotificationBell from '../../features/notifications/components/NotificationBell.tsx'
 import GlobalSearch from '../../features/search/components/GlobalSearch'
+import { useAppDispatch } from '../../hooks/redux'
+import { toggleSidebar } from '../../store/uiSlice'
 
 const Navbar: React.FC = () => {
+  const dispatch = useAppDispatch()
+
   return (
-    <header className="h-16 bg-white border-b flex items-center justify-between px-6 z-10">
+    <header className="h-16 bg-[var(--bg-card)] border-b border-[var(--color-border)]/10 flex items-center justify-between px-6 z-10 transition-colors duration-300">
       <div className="flex items-center gap-4 flex-1">
-        <button className="lg:hidden text-gray-500">
+        <button 
+          onClick={() => dispatch(toggleSidebar())}
+          className="lg:hidden text-[var(--text-secondary)] hover:text-[var(--color-primary)] transition-colors"
+        >
           <Menu className="w-6 h-6" />
         </button>
         <GlobalSearch />
       </div>
       <div className="flex items-center gap-4">
         <NotificationBell />
-        <div className="h-8 w-px bg-gray-100" />
-        <button className="hidden sm:block px-4 py-2 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-sm hover:shadow-md active:scale-95">
+        <div className="h-8 w-px bg-[var(--color-border)]/20" />
+        <button className="hidden sm:block px-4 py-2 bg-[var(--color-primary)] text-white text-sm font-bold rounded-xl hover:opacity-90 transition-all shadow-sm hover:shadow-md active:scale-95">
           + New Project
         </button>
       </div>

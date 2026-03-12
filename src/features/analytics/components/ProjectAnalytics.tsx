@@ -74,15 +74,22 @@ const ProjectAnalytics: React.FC<ProjectAnalyticsProps> = ({ projects: rawProjec
               outerRadius={100}
               paddingAngle={5}
               dataKey="value"
+              stroke="transparent"
             >
               {statusData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip 
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              contentStyle={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--color-border)', 
+                borderRadius: '12px',
+                color: 'var(--text-primary)'
+              }}
+              itemStyle={{ color: 'var(--text-primary)' }}
             />
-            <Legend verticalAlign="bottom" height={36} iconType="circle" />
+            <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ paddingTop: '20px', color: 'var(--text-muted)', fontSize: '12px', fontWeight: 600 }} />
           </PieChart>
         </ResponsiveContainer>
       </AnalyticsCard>
@@ -94,14 +101,20 @@ const ProjectAnalytics: React.FC<ProjectAnalyticsProps> = ({ projects: rawProjec
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={progressData}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.1} />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-muted)', fontWeight: 600 }} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-muted)', fontWeight: 600 }} />
             <Tooltip 
-              cursor={{ fill: '#f8fafc' }}
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              cursor={{ fill: 'var(--color-primary)', opacity: 0.05 }}
+              contentStyle={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--color-border)', 
+                borderRadius: '12px',
+                color: 'var(--text-primary)'
+              }}
+              itemStyle={{ color: 'var(--text-primary)' }}
             />
-            <Bar dataKey="progress" fill="#3b82f6" radius={[6, 6, 0, 0]} barSize={24} />
+            <Bar dataKey="progress" fill="var(--color-primary)" radius={[6, 6, 0, 0]} barSize={24} />
           </BarChart>
         </ResponsiveContainer>
       </AnalyticsCard>
@@ -113,19 +126,25 @@ const ProjectAnalytics: React.FC<ProjectAnalyticsProps> = ({ projects: rawProjec
       >
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={trendData}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94a3b8', fontWeight: 600 }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94a3b8', fontWeight: 600 }} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.1} />
+            <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-muted)', fontWeight: 600 }} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--text-muted)', fontWeight: 600 }} />
             <Tooltip 
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              contentStyle={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--color-border)', 
+                borderRadius: '12px',
+                color: 'var(--text-primary)'
+              }}
+              itemStyle={{ color: 'var(--text-primary)' }}
             />
             <Line 
               type="monotone" 
               dataKey="count" 
-              stroke="#3b82f6" 
+              stroke="var(--color-primary)" 
               strokeWidth={4} 
-              dot={{ r: 6, fill: '#3b82f6', strokeWidth: 2, stroke: '#fff' }}
-              activeDot={{ r: 8 }}
+              dot={{ r: 6, fill: 'var(--color-primary)', strokeWidth: 2, stroke: 'var(--bg-card)' }}
+              activeDot={{ r: 8, strokeWidth: 0 }}
             />
           </LineChart>
         </ResponsiveContainer>

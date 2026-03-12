@@ -54,11 +54,11 @@ const TeamPage: React.FC = () => {
       header: 'Member',
       cell: ({ row }: any) => (
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-gray-100 overflow-hidden border border-gray-100 flex-shrink-0">
+          <div className="h-9 w-9 rounded-full bg-[var(--bg-main)] overflow-hidden border border-[var(--color-border)]/10 flex-shrink-0">
             {row.original.avatar ? (
               <img src={row.original.avatar} alt={row.original.name} className="h-full w-full object-cover" />
             ) : (
-              <div className="h-full w-full flex items-center justify-center text-xs font-bold text-gray-400">
+              <div className="h-full w-full flex items-center justify-center text-xs font-bold text-[var(--text-muted)]">
                 {row.original.name.charAt(0)}
               </div>
             )}
@@ -67,12 +67,12 @@ const TeamPage: React.FC = () => {
             <Link 
               to={`/team/${row.original.id}`} 
               virtual-href={`/team/${row.original.id}`}
-              className="font-bold text-gray-900 hover:text-primary transition-colors flex items-center gap-1.5"
+              className="font-bold text-[var(--text-primary)] hover:text-[var(--color-primary)] transition-colors flex items-center gap-1.5"
             >
               {row.original.name}
               <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
-            <span className="text-xs text-gray-400">{row.original.email}</span>
+            <span className="text-xs text-[var(--text-muted)]">{row.original.email}</span>
           </div>
         </div>
       ),
@@ -95,7 +95,7 @@ const TeamPage: React.FC = () => {
       accessorKey: 'joinedDate',
       header: 'Joined Date',
       cell: ({ row }: any) => (
-        <span className="text-sm text-gray-500 font-medium">{row.original.joinedDate}</span>
+        <span className="text-sm text-[var(--text-secondary)] font-medium">{row.original.joinedDate}</span>
       ),
     },
     {
@@ -103,12 +103,12 @@ const TeamPage: React.FC = () => {
       header: '',
       cell: ({ row }: any) => (
         <div className="flex items-center justify-end gap-2 text-right">
-          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+          <button className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
             <Mail className="h-4 w-4" />
           </button>
           <button 
             onClick={() => handleDelete(row.original.id, row.original.name)}
-            className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+            className="p-2 text-[var(--text-muted)] hover:text-red-500 transition-colors"
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -121,8 +121,8 @@ const TeamPage: React.FC = () => {
     <div className="p-8 h-full space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Team Management</h1>
-          <p className="text-gray-500">Manage your organization's members, roles and invitations.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-[var(--text-primary)]">Team Management</h1>
+          <p className="text-[var(--text-secondary)]">Manage your organization's members, roles and invitations.</p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="h-11 px-6 shadow-lg shadow-primary/20">
           <UserPlus className="mr-2 h-4 w-4" />
@@ -130,12 +130,12 @@ const TeamPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden min-h-[400px]">
+      <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--color-border)]/10 shadow-sm overflow-hidden min-h-[400px]">
         {loading && members.length === 0 ? (
           <div className="h-96 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" />
-              <p className="text-sm font-medium text-gray-400">Loading team members...</p>
+              <Loader2 className="h-10 w-10 animate-spin text-[var(--color-primary)]" />
+              <p className="text-sm font-medium text-[var(--text-muted)]">Loading team members...</p>
             </div>
           </div>
         ) : (

@@ -60,23 +60,29 @@ const TeamAnalytics: React.FC<TeamAnalyticsProps> = ({ members: rawMembers, task
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={productivityData} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
+            <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="var(--color-border)" opacity={0.1} />
             <XAxis type="number" hide />
             <YAxis 
               dataKey="name" 
               type="category" 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }}
+              tick={{ fontSize: 10, fill: 'var(--text-muted)', fontWeight: 600 }}
               width={100}
             />
             <Tooltip 
-              cursor={{ fill: '#f8fafc' }}
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              cursor={{ fill: 'var(--color-primary)', opacity: 0.05 }}
+              contentStyle={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--color-border)', 
+                borderRadius: '12px',
+                color: 'var(--text-primary)'
+              }}
+              itemStyle={{ color: 'var(--text-primary)' }}
             />
-            <Legend verticalAlign="top" align="right" />
+            <Legend verticalAlign="top" align="right" wrapperStyle={{ color: 'var(--text-muted)', fontSize: '10px', fontWeight: 700 }} />
             <Bar dataKey="completed" fill="#10b981" radius={[0, 4, 4, 0]} stackId="a" />
-            <Bar dataKey="active" fill="#e2e8f0" radius={[0, 4, 4, 0]} stackId="a" />
+            <Bar dataKey="active" fill="var(--bg-main)" radius={[0, 4, 4, 0]} stackId="a" />
           </BarChart>
         </ResponsiveContainer>
       </AnalyticsCard>
@@ -87,18 +93,24 @@ const TeamAnalytics: React.FC<TeamAnalyticsProps> = ({ members: rawMembers, task
       >
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={contributionData}>
-            <PolarGrid stroke="#e2e8f0" />
-            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} />
+            <PolarGrid stroke="var(--color-border)" opacity={0.2} />
+            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: 'var(--text-muted)', fontWeight: 600 }} />
             <PolarRadiusAxis angle={30} domain={[0, 100]} hide />
             <Radar
               name="Member Data"
               dataKey="Efficiency"
-              stroke="#3b82f6"
-              fill="#3b82f6"
+              stroke="var(--color-primary)"
+              fill="var(--color-primary)"
               fillOpacity={0.6}
             />
             <Tooltip 
-               contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+               contentStyle={{ 
+                 backgroundColor: 'var(--bg-card)', 
+                 border: '1px solid var(--color-border)', 
+                 borderRadius: '12px',
+                 color: 'var(--text-primary)'
+               }}
+               itemStyle={{ color: 'var(--text-primary)' }}
             />
           </RadarChart>
         </ResponsiveContainer>

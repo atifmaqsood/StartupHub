@@ -44,8 +44,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "bg-white p-4 rounded-xl border border-gray-100 shadow-sm transition-all group hover:border-primary/30",
-        isDragging && "ring-2 ring-primary border-transparent scale-105"
+        "bg-[var(--bg-card)] p-4 rounded-xl border border-[var(--color-border)]/10 shadow-sm transition-all group hover:border-[var(--color-primary)]/30",
+        isDragging && "ring-2 ring-[var(--color-primary)] border-transparent scale-105"
       )}
     >
       <div className="flex items-start justify-between mb-3">
@@ -53,38 +53,38 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           <button 
             {...listeners} 
             {...attributes} 
-            className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-400 p-0.5 rounded transition-colors"
+            className="cursor-grab active:cursor-grabbing text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg transition-colors"
           >
             <GripVertical className="h-4 w-4" />
           </button>
-          <Badge variant={getPriorityColor(task.priority)} className="text-[10px] uppercase font-bold px-1.5 py-0">
-            {task.priority}
+          <Badge variant={getPriorityColor(task.priority)} className="text-[10px] uppercase font-black px-2 py-0.5">
+            {task.priority || 'Medium'}
           </Badge>
         </div>
-        <button className="text-gray-400 hover:text-gray-600 transition-colors">
+        <button className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors p-1">
           <MoreVertical className="h-4 w-4" />
         </button>
       </div>
 
       <Link to={`/tasks/${task.id}`} virtual-href={`/tasks/${task.id}`}>
-        <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-primary transition-colors mb-2">
+        <h4 className="text-sm font-bold text-[var(--text-primary)] line-clamp-2 group-hover:text-[var(--color-primary)] transition-colors mb-2">
           {task.title}
         </h4>
       </Link>
 
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-[10px] font-medium text-gray-400 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
+        <span className="text-[10px] font-black text-[var(--text-muted)] bg-[var(--bg-main)] px-2.5 py-1 rounded-lg border border-[var(--color-border)]/10 uppercase tracking-widest">
           {task.projectName || 'General'}
         </span>
       </div>
 
-      <div className="flex items-center justify-between pt-3 border-t border-gray-50">
-        <div className="flex items-center gap-1.5 text-xs text-gray-400">
+      <div className="flex items-center justify-between pt-4 border-t border-[var(--color-border)]/5">
+        <div className="flex items-center gap-2 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
           <Calendar className="h-3 w-3" />
           <span>{task.dueDate}</span>
         </div>
-        <div className="flex -space-x-1.5 overflow-hidden">
-          <div className="h-6 w-6 rounded-full border-2 border-white bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">
+        <div className="flex -space-x-2 overflow-hidden">
+          <div className="h-7 w-7 rounded-full border-2 border-[var(--bg-card)] bg-[var(--color-primary)]/10 flex items-center justify-center text-[10px] font-black text-[var(--color-primary)] shadow-sm">
             {task.assignee?.charAt(0) || 'U'}
           </div>
         </div>

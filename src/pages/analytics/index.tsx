@@ -68,8 +68,8 @@ const AnalyticsPage: React.FC = () => {
       className={cn(
         "flex items-center gap-2 px-6 py-4 border-b-2 font-bold transition-all",
         activeTab === id 
-          ? "border-primary text-primary" 
-          : "border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-200"
+          ? "border-[var(--color-primary)] text-[var(--color-primary)]" 
+          : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--color-border)]/20"
       )}
     >
       <Icon className="h-4 w-4" />
@@ -81,11 +81,11 @@ const AnalyticsPage: React.FC = () => {
     <div className="p-8 space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 flex items-center gap-3">
-            <PieChartIcon className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] flex items-center gap-3">
+            <PieChartIcon className="h-8 w-8 text-[var(--color-primary)]" />
             Analytics & Insights
           </h1>
-          <p className="text-gray-500 font-medium">Visual intelligence for your business performance.</p>
+          <p className="text-[var(--text-secondary)] font-medium">Visual intelligence for your business performance.</p>
         </div>
         <AnalyticsFilters onRefresh={() => window.location.reload()} />
       </div>
@@ -97,7 +97,7 @@ const AnalyticsPage: React.FC = () => {
           change={12} 
           trend="up" 
           icon={Briefcase} 
-          color="bg-blue-50 text-blue-600" 
+          color="bg-blue-500/10 text-blue-500" 
         />
         <MetricWidget 
           title="Tasks Completed" 
@@ -105,7 +105,7 @@ const AnalyticsPage: React.FC = () => {
           change={8} 
           trend="up" 
           icon={CheckCircle2} 
-          color="bg-green-50 text-green-600" 
+          color="bg-green-500/10 text-green-500" 
         />
         <MetricWidget 
           title="Pipeline Value" 
@@ -113,19 +113,19 @@ const AnalyticsPage: React.FC = () => {
           change={5} 
           trend="up" 
           icon={Target} 
-          color="bg-purple-50 text-purple-600" 
+          color="bg-purple-500/10 text-purple-500" 
         />
         <MetricWidget 
           title="Active Members" 
           value={stats.activeMembers} 
           trend="neutral" 
           icon={Users} 
-          color="bg-orange-50 text-orange-600" 
+          color="bg-orange-500/10 text-orange-500" 
         />
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden min-h-[600px] flex flex-col">
-        <div className="flex border-b border-gray-50 bg-gray-50/30 px-4">
+      <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--color-border)]/10 shadow-sm overflow-hidden min-h-[600px] flex flex-col transition-colors duration-300">
+        <div className="flex border-b border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4">
           <TabButton id="projects" label="Projects" icon={Briefcase} />
           <TabButton id="tasks" label="Tasks" icon={CheckCircle2} />
           <TabButton id="crm" label="CRM" icon={Target} />

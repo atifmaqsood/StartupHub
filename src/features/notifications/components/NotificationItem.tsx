@@ -34,8 +34,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onCli
     <div 
       onClick={onClick}
       className={cn(
-        "flex gap-4 p-4 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-50 last:border-0 relative",
-        !notification.isRead && "bg-primary/5"
+        "flex gap-5 p-6 hover:bg-[var(--color-primary)]/[0.03] transition-all cursor-pointer border-b border-[var(--color-border)]/5 last:border-0 relative group",
+        !notification.isRead && "bg-[var(--color-primary)]/[0.02]"
       )}
     >
       <div className="flex-shrink-0 relative">
@@ -43,32 +43,42 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onCli
           <img 
             src={notification.userAvatar} 
             alt={notification.userName} 
-            className="h-10 w-10 rounded-xl object-cover border border-gray-100 shadow-sm"
+            className="h-12 w-12 rounded-2xl object-cover border border-[var(--color-border)]/10 shadow-sm"
           />
         ) : (
-          <div className="h-10 w-10 rounded-xl bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-400 border border-gray-100">
+          <div className="h-12 w-12 rounded-2xl bg-[var(--bg-main)] flex items-center justify-center text-xs font-black text-[var(--text-muted)] border border-[var(--color-border)]/10 shadow-sm">
             {getInitials(notification.userName)}
           </div>
         )}
-        <div className="absolute -bottom-1 -right-1 bg-white p-1 rounded-lg border border-gray-100 shadow-sm">
+        <div className="absolute -bottom-1.5 -right-1.5 bg-[var(--bg-card)] p-1.5 rounded-xl border border-[var(--color-border)]/10 shadow-lg transform group-hover:scale-110 transition-transform">
           {getIcon()}
         </div>
       </div>
 
-      <div className="flex-1 space-y-1">
+      <div className="flex-1 space-y-1.5">
         <p className={cn(
-          "text-sm text-gray-900 leading-snug",
-          !notification.isRead ? "font-bold" : "font-medium"
+          "text-[13px] leading-relaxed tracking-tight transition-colors",
+          !notification.isRead ? "font-black text-[var(--text-primary)]" : "font-semibold text-[var(--text-secondary)]"
         )}>
           {notification.message}
         </p>
-        <p className="text-xs text-gray-400 font-medium flex items-center gap-1.5">
-          {formatDistanceToNow(new Date(notification.timestamp), { addSuffix: true })}
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest opacity-60">
+            {formatDistanceToNow(new Date(notification.timestamp), { addSuffix: true })}
+          </p>
+          {notification.type && (
+            <span className="h-1 w-1 rounded-full bg-[var(--text-muted)] opacity-30" />
+          )}
+          <span className="text-[10px] text-[var(--color-primary)] font-black uppercase tracking-widest opacity-80">
+            {notification.type}
+          </span>
+        </div>
       </div>
 
       {!notification.isRead && (
-        <div className="absolute top-4 right-4 h-2 w-2 rounded-full bg-primary" />
+        <div className="flex-shrink-0 flex items-center pr-2">
+          <div className="h-2.5 w-2.5 rounded-full bg-[var(--color-primary)] shadow-[0_0_12px_rgba(var(--color-primary-rgb),0.5)] animate-pulse" />
+        </div>
       )}
     </div>
   )

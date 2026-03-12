@@ -12,7 +12,7 @@ interface SearchResultGroupProps {
 const SearchResultGroup: React.FC<SearchResultGroupProps> = ({ title, items, query, onSelect }) => {
   return (
     <div className="space-y-2">
-      <h3 className="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-4">
+      <h3 className="px-3 text-[10px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-[0.2em] leading-none mb-4">
         {title}
       </h3>
       <div className="grid gap-1">

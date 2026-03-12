@@ -5,6 +5,8 @@ import taskReducer from './taskSlice.ts'
 import crmReducer from './crmSlice.ts'
 import teamReducer from './teamSlice.ts'
 import notificationReducer from './notificationSlice.ts'
+import settingsReducer from './settingsSlice.ts'
+import uiReducer from './uiSlice.ts'
 
 const reducers = {
   auth: authReducer,
@@ -13,6 +15,8 @@ const reducers = {
   crm: crmReducer,
   team: teamReducer,
   notifications: notificationReducer,
+  settings: settingsReducer,
+  ui: uiReducer,
 }
 
 export const store = configureStore({

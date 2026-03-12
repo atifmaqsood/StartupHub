@@ -45,28 +45,37 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ onClose }) 
   }
 
   return (
-    <div className="absolute top-12 right-0 w-80 sm:w-96 bg-white rounded-2xl border border-gray-100 shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-      <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
-        <h3 className="font-bold text-gray-900">Notifications</h3>
+    <div className="absolute top-14 right-0 w-80 sm:w-[420px] bg-[var(--bg-card)] rounded-3xl border border-[var(--color-border)]/10 shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-300 origin-top-right transition-colors duration-300">
+      <div className="px-6 py-5 border-b border-[var(--color-border)]/5 flex items-center justify-between bg-[var(--bg-main)]/50">
+        <div>
+          <h3 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-widest">Neural Feed</h3>
+          <p className="text-[9px] font-black text-[var(--text-muted)] opacity-50 uppercase tracking-widest mt-1">Real-time intelligence</p>
+        </div>
         <div className="flex items-center gap-2">
           {unreadCount > 0 && (
             <button 
               onClick={handleMarkAllRead}
-              className="p-1.5 hover:bg-white rounded-lg text-primary transition-colors hover:shadow-sm"
+              className="p-2 hover:bg-[var(--bg-card)] rounded-xl text-[var(--color-primary)] transition-all hover:shadow-lg active:scale-95 border border-transparent hover:border-[var(--color-border)]/10"
               title="Mark all as read"
             >
               <CheckCheck className="h-4 w-4" />
             </button>
           )}
-          <button className="p-1.5 hover:bg-white rounded-lg text-gray-400 transition-colors hover:text-gray-600">
+          <button 
+            onClick={() => {
+              navigate('/settings/notifications')
+              onClose()
+            }}
+            className="p-2 hover:bg-[var(--bg-card)] rounded-xl text-[var(--text-muted)] transition-all hover:text-[var(--text-primary)] border border-transparent hover:border-[var(--color-border)]/10 active:scale-95"
+          >
             <Settings className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      <div className="max-h-[400px] overflow-y-auto scrollbar-hide">
+      <div className="max-h-[450px] overflow-y-auto custom-scrollbar">
         {items.length > 0 ? (
-          <div>
+          <div className="divide-y divide-[var(--color-border)]/5">
             {latestNotifications.map(notif => (
               <NotificationItem 
                 key={notif.id} 
@@ -76,26 +85,29 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ onClose }) 
             ))}
           </div>
         ) : (
-          <div className="py-12 flex flex-col items-center justify-center space-y-3">
-            <div className="p-4 bg-gray-50 rounded-full">
-              <BellOff className="h-8 w-8 text-gray-300" />
+          <div className="py-20 flex flex-col items-center justify-center space-y-4">
+            <div className="p-6 bg-[var(--bg-main)] rounded-2xl border border-[var(--color-border)]/10">
+              <BellOff className="h-10 w-10 text-[var(--text-muted)] opacity-20" />
             </div>
-            <p className="text-sm font-medium text-gray-400">All caught up!</p>
+            <div className="text-center">
+              <h4 className="text-xs font-black text-[var(--text-primary)] uppercase tracking-widest">Feed Zero</h4>
+              <p className="text-[10px] font-bold text-[var(--text-muted)] mt-1 italic">No new signals detected.</p>
+            </div>
           </div>
         )}
       </div>
 
-      <div className="p-3 border-t border-gray-50 bg-gray-50/30">
+      <div className="p-4 border-t border-[var(--color-border)]/5 bg-[var(--bg-main)]/30">
         <Button 
           variant="outline" 
           fullWidth 
-          className="h-10 text-gray-600 border-0 hover:bg-white"
+          className="h-12 text-[var(--text-muted)] border-[var(--color-border)]/10 hover:bg-[var(--bg-card)] hover:text-[var(--text-primary)] font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl"
           onClick={() => {
             navigate('/notifications')
             onClose()
           }}
         >
-          View All Activity
+          Access Full Stream
         </Button>
       </div>
     </div>

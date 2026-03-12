@@ -56,9 +56,9 @@ export function DataTable<T extends object>({
         </div>
       )}
 
-      <div className="w-full overflow-x-auto rounded-xl border border-gray-100 bg-white shadow-sm">
+      <div className="w-full overflow-x-auto rounded-xl border border-[var(--color-border)]/10 bg-[var(--bg-card)] shadow-sm transition-colors duration-300">
         <table className="w-full text-sm text-left">
-          <thead className="bg-gray-50 text-gray-700 uppercase font-bold text-[10px] tracking-wider border-b border-gray-100">
+          <thead className="bg-[var(--bg-main)] text-[var(--text-muted)] uppercase font-bold text-[10px] tracking-wider border-b border-[var(--color-border)]/10">
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
@@ -70,7 +70,7 @@ export function DataTable<T extends object>({
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         {header.column.getCanSort() && (
-                          <ArrowUpDown className="h-3 w-3 text-gray-400 group-hover:text-primary transition-colors" />
+                          <ArrowUpDown className="h-3 w-3 text-[var(--text-muted)] group-hover:text-[var(--color-primary)] transition-colors" />
                         )}
                       </div>
                     )}
@@ -79,12 +79,12 @@ export function DataTable<T extends object>({
               </tr>
             ))}
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-[var(--color-border)]/5">
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map(row => (
-                <tr key={row.id} className="hover:bg-gray-50/50 transition-colors">
+                <tr key={row.id} className="hover:bg-[var(--bg-main)]/50 transition-colors">
                   {row.getVisibleCells().map(cell => (
-                    <td key={cell.id} className="px-6 py-4 text-gray-600">
+                    <td key={cell.id} className="px-6 py-4 text-[var(--text-secondary)] font-medium">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -92,7 +92,7 @@ export function DataTable<T extends object>({
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={columns.length} className="px-6 py-12 text-center text-[var(--text-muted)]">
                   No results found.
                 </td>
               </tr>
@@ -102,7 +102,7 @@ export function DataTable<T extends object>({
       </div>
 
       <div className="flex items-center justify-between px-2">
-        <div className="text-sm text-gray-500">
+        <div className="text-sm font-bold text-[var(--text-muted)]">
           Showing {table.getRowModel().rows.length} of {data.length} results
         </div>
         <div className="flex items-center space-x-2">
@@ -114,7 +114,7 @@ export function DataTable<T extends object>({
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <div className="text-sm font-medium text-gray-700 mx-2">
+          <div className="text-sm font-bold text-[var(--text-primary)] mx-2">
             Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </div>
           <Button

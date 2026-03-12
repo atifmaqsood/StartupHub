@@ -21,6 +21,14 @@ import ActivityFeedPage from '../pages/notifications/index.tsx'
 import AnalyticsPage from '../pages/analytics/index.tsx'
 import ErrorPage from '../pages/ErrorPage.tsx'
 
+// Settings Pages
+import SettingsLayout from '../pages/settings/Layout.tsx'
+import ProfilePage from '../pages/settings/Profile.tsx'
+import SecurityPage from '../pages/settings/Security.tsx'
+import OrganizationPage from '../pages/settings/Organization.tsx'
+import AppearancePage from '../pages/settings/Appearance.tsx'
+import NotificationPage from '../pages/settings/Notifications.tsx'
+
 // Placeholder components
 const Placeholder = ({ name }: { name: string }) => (
   <div className="p-8 text-center sm:text-left">
@@ -136,13 +144,22 @@ export const router = createBrowserRouter([
   {
     path: '/settings',
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
         children: [
-          { index: true, element: <Placeholder name="Settings" /> },
-          { path: 'profile', element: <Placeholder name="Profile Settings" /> },
-          { path: 'appearance', element: <Placeholder name="Appearance" /> },
+          {
+            element: <SettingsLayout />,
+            children: [
+              { index: true, element: <Navigate to="profile" replace /> },
+              { path: 'profile', element: <ProfilePage /> },
+              { path: 'security', element: <SecurityPage /> },
+              { path: 'organization', element: <OrganizationPage /> },
+              { path: 'appearance', element: <AppearancePage /> },
+              { path: 'notifications', element: <NotificationPage /> },
+            ]
+          }
         ]
       }
     ],

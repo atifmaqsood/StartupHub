@@ -74,14 +74,21 @@ const CRMAnalytics: React.FC<CRMAnalyticsProps> = ({ leads: rawLeads }) => {
         <ResponsiveContainer width="100%" height="100%">
           <FunnelChart>
             <Tooltip 
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              contentStyle={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--color-border)', 
+                borderRadius: '12px',
+                color: 'var(--text-primary)'
+              }}
+              itemStyle={{ color: 'var(--text-primary)' }}
             />
             <Funnel
               data={stageData}
               dataKey="value"
               nameKey="name"
+              stroke="transparent"
             >
-              <LabelList position="right" fill="#94a3b8" stroke="none" dataKey="name" />
+              <LabelList position="right" fill="var(--text-muted)" stroke="none" dataKey="name" style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase' }} />
             </Funnel>
           </FunnelChart>
         </ResponsiveContainer>
@@ -93,15 +100,21 @@ const CRMAnalytics: React.FC<CRMAnalyticsProps> = ({ leads: rawLeads }) => {
       >
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={pipelineValue}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} />
-            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 600 }} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.1} />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-muted)', fontWeight: 600 }} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--text-muted)', fontWeight: 600 }} />
             <Tooltip 
               formatter={(value: any) => [`$${value.toLocaleString()}`, 'Value']}
-              cursor={{ fill: '#f8fafc' }}
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              cursor={{ fill: 'var(--color-primary)', opacity: 0.05 }}
+              contentStyle={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--color-border)', 
+                borderRadius: '12px',
+                color: 'var(--text-primary)'
+              }}
+              itemStyle={{ color: 'var(--text-primary)' }}
             />
-            <Bar dataKey="value" fill="#3b82f6" radius={[6, 6, 0, 0]} barSize={40} />
+            <Bar dataKey="value" fill="var(--color-primary)" radius={[6, 6, 0, 0]} barSize={40} />
           </BarChart>
         </ResponsiveContainer>
       </AnalyticsCard>
@@ -121,15 +134,22 @@ const CRMAnalytics: React.FC<CRMAnalyticsProps> = ({ leads: rawLeads }) => {
               outerRadius={100}
               paddingAngle={8}
               dataKey="value"
+              stroke="transparent"
             >
               {sourceData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={SOURCE_COLORS[index % SOURCE_COLORS.length]} />
               ))}
             </Pie>
             <Tooltip 
-              contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+              contentStyle={{ 
+                backgroundColor: 'var(--bg-card)', 
+                border: '1px solid var(--color-border)', 
+                borderRadius: '12px',
+                color: 'var(--text-primary)'
+              }}
+              itemStyle={{ color: 'var(--text-primary)' }}
             />
-            <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle" />
+            <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle" wrapperStyle={{ color: 'var(--text-muted)', fontSize: '12px', fontWeight: 600 }} />
           </PieChart>
         </ResponsiveContainer>
       </AnalyticsCard>

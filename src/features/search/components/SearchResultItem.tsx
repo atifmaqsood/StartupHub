@@ -15,7 +15,7 @@ const highlightMatch = (text: string, query: string) => {
   const parts = text.split(new RegExp(`(${query})`, 'gi'))
   return parts.map((part, i) => 
     part.toLowerCase() === query.toLowerCase() 
-      ? <span key={i} className="bg-yellow-100 text-yellow-900 rounded-sm">{part}</span> 
+      ? <span key={i} className="bg-[var(--color-primary)]/20 text-[var(--color-primary)] px-0.5 rounded-sm font-black">{part}</span> 
       : part
   )
 }
@@ -43,38 +43,38 @@ const SearchResultItem: React.FC<SearchResultItemProps> = ({ item, query, onSele
   return (
     <div 
       onClick={handleClick}
-      className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-all cursor-pointer group animate-in slide-in-from-left-2 duration-300"
+      className="flex items-center gap-5 p-4 rounded-2xl hover:bg-[var(--bg-main)] transition-all cursor-pointer group animate-in slide-in-from-left-2 duration-300 border border-transparent hover:border-[var(--color-border)]/10"
     >
       <div className={cn(
-        "p-2.5 rounded-lg",
-        item.type === 'project' ? "bg-blue-50 text-blue-600" :
-        item.type === 'task' ? "bg-green-50 text-green-600" :
-        item.type === 'lead' ? "bg-purple-50 text-purple-600" :
-        item.type === 'member' ? "bg-orange-50 text-orange-600" :
-        "bg-gray-50 text-gray-600"
+        "p-3 rounded-xl shadow-sm transition-transform group-hover:scale-110",
+        item.type === 'project' ? "bg-blue-500/10 text-blue-500" :
+        item.type === 'task' ? "bg-green-500/10 text-green-500" :
+        item.type === 'lead' ? "bg-purple-500/10 text-purple-600" :
+        item.type === 'member' ? "bg-orange-500/10 text-orange-500" :
+        "bg-[var(--color-border)]/10 text-[var(--text-muted)]"
       )}>
         <Icon className="h-4 w-4" />
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <h4 className="text-sm font-bold text-gray-900 truncate">
+          <h4 className="text-[13px] font-black text-[var(--text-primary)] truncate tracking-tight">
             {highlightMatch(item.title, query)}
           </h4>
           {item.status && (
-            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-lg bg-gray-100 text-gray-600 uppercase tracking-wider">
+            <span className="text-[9px] font-black px-2 py-0.5 rounded-lg bg-[var(--bg-card)] border border-[var(--color-border)]/10 text-[var(--text-muted)] uppercase tracking-widest shadow-sm">
               {item.status}
             </span>
           )}
         </div>
         {item.subtitle && (
-          <p className="text-xs text-gray-500 font-medium mt-0.5">
+          <p className="text-[11px] text-[var(--text-muted)] font-bold mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
             {highlightMatch(item.subtitle, query)}
           </p>
         )}
       </div>
 
-      <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-500 group-hover:translate-x-1 transition-all" />
+      <ChevronRight className="h-4 w-4 text-[var(--text-muted)] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
     </div>
   )
 }

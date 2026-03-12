@@ -33,57 +33,57 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Lead">
-      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
+        <div className="grid grid-cols-2 gap-6">
           <Input
-            label="Contact Name"
+            label="Prospect Name"
             placeholder="John Doe"
             {...register('name', { required: 'Name is required' })}
             error={errors.name?.message as string}
           />
           <Input
-            label="Company"
+            label="Corporate Entity"
             placeholder="Acme Corp"
             {...register('company', { required: 'Company is required' })}
             error={errors.company?.message as string}
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-6">
           <Input
-            label="Email Address"
+            label="Digital Address"
             type="email"
             placeholder="john@example.com"
             {...register('email', { required: 'Email is required' })}
             error={errors.email?.message as string}
           />
           <Input
-            label="Phone"
+            label="Comms Frequency"
             placeholder="+1 (555) 000-0000"
             {...register('phone')}
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <DollarSign className="h-3.5 w-3.5 text-gray-400" />
-              Deal Value ($)
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1 flex items-center gap-2">
+              <DollarSign className="h-3.5 w-3.5 opacity-50" />
+              Capital Value ($)
             </label>
             <input
               type="number"
-              className="w-full h-10 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary"
+              className="w-full h-11 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4 py-2 text-sm font-bold text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:border-[var(--color-primary)] transition-all shadow-sm"
               {...register('value', { required: 'Deal value is required', min: 0 })}
             />
-            {errors.value && <p className="text-xs text-red-500 font-medium">{errors.value.message as string}</p>}
+            {errors.value && <p className="text-[10px] text-red-500 font-black mt-1 uppercase">{errors.value.message as string}</p>}
           </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Target className="h-3.5 w-3.5 text-gray-400" />
-              Lead Source
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1 flex items-center gap-2">
+              <Target className="h-3.5 w-3.5 opacity-50" />
+              Inflow Vector
             </label>
             <select
-              className="w-full h-10 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary"
+              className="w-full h-11 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4 py-2 text-sm font-bold text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:border-[var(--color-primary)] transition-all shadow-sm"
               {...register('source')}
             >
               <option value="Website">Website</option>
@@ -94,14 +94,14 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-              <Briefcase className="h-3.5 w-3.5 text-gray-400" />
-              Initial Stage
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1 flex items-center gap-2">
+              <Briefcase className="h-3.5 w-3.5 opacity-50" />
+              Pipeline Phase
             </label>
             <select
-              className="w-full h-10 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary"
+              className="w-full h-11 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4 py-2 text-sm font-bold text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:border-[var(--color-primary)] transition-all shadow-sm"
               {...register('status')}
             >
               <option value="New Lead">New Lead</option>
@@ -111,10 +111,10 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit }) => {
               <option value="Lost">Lost</option>
             </select>
           </div>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700">Assign To</label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Asset Manager</label>
             <select
-              className="w-full h-10 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary"
+              className="w-full h-11 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4 py-2 text-sm font-bold text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:border-[var(--color-primary)] transition-all shadow-sm"
               {...register('assignedTo')}
             >
               <option value="Alex Rivera">Alex Rivera</option>
@@ -124,13 +124,13 @@ const LeadModal: React.FC<LeadModalProps> = ({ isOpen, onClose, onSubmit }) => {
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-50">
-          <Button variant="outline" type="button" onClick={onClose}>
-            Cancel
+        <div className="flex justify-end gap-4 mt-8 pt-6 border-t border-[var(--color-border)]/10">
+          <Button variant="outline" type="button" onClick={onClose} className="rounded-2xl border-[var(--color-border)]/10 text-[10px] font-black uppercase tracking-widest px-8">
+            Abeyance
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting} className="rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-[var(--color-primary)]/20">
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Save Lead
+            Ingest Lead
           </Button>
         </div>
       </form>

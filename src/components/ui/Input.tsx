@@ -11,20 +11,20 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full space-y-1.5">
         {label && (
-          <label className="text-sm font-medium text-gray-700 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label className="text-sm font-bold text-[var(--text-primary)] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ml-0.5">
             {label}
           </label>
         )}
         <input
           className={cn(
-            'flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all',
+            'flex h-11 w-full rounded-xl border border-[var(--color-border)]/20 bg-[var(--bg-card)] px-4 py-2 text-sm text-[var(--text-primary)] ring-offset-[var(--bg-card)] file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[var(--text-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:border-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-50 transition-all shadow-sm',
             error && 'border-red-500 focus-visible:ring-red-500/20 focus-visible:border-red-500',
             className
           )}
           ref={ref}
           {...props}
         />
-        {error && <p className="text-xs font-medium text-red-500">{error}</p>}
+        {error && <p className="text-xs font-bold text-red-500 mt-1 ml-1">{error}</p>}
       </div>
     )
   }

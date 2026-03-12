@@ -20,7 +20,6 @@ interface DashboardChartsProps {
   leads: any[]
 }
 
-const COLORS = ['#aa3bff', '#6b6375', '#00C49F', '#FFBB28', '#FF8042']
 
 const DashboardCharts: React.FC<DashboardChartsProps> = ({ projects, tasks, leads }) => {
   // Process data for charts
@@ -42,71 +41,82 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({ projects, tasks, lead
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-white p-6 rounded-xl border shadow-sm">
-        <h3 className="text-lg font-semibold mb-6">Project Progress (%)</h3>
+      <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-[var(--color-border)]/10 shadow-sm transition-colors duration-300">
+        <h3 className="text-lg font-bold mb-6 text-[var(--text-primary)]">Project Progress (%)</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={projectProgressData}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-              <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-              <Tooltip cursor={{fill: '#f9fafb'}} />
-              <Bar dataKey="progress" fill="#aa3bff" radius={[4, 4, 0, 0]} barSize={40} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.1} />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 600}} />
+              <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 600}} />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--color-border)', borderRadius: '12px', color: 'var(--text-primary)' }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+                cursor={{fill: 'var(--color-primary)', opacity: 0.05}} 
+              />
+              <Bar dataKey="progress" fill="var(--color-primary)" radius={[6, 6, 0, 0]} barSize={32} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl border shadow-sm">
-        <h3 className="text-lg font-semibold mb-6">Lead Values Overview</h3>
+      <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-[var(--color-border)]/10 shadow-sm transition-colors duration-300">
+        <h3 className="text-lg font-bold mb-6 text-[var(--text-primary)]">Lead Values Overview</h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={leadValueData}>
               <defs>
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#aa3bff" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="#aa3bff" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.2}/>
+                  <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-              <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-              <Tooltip />
-              <Area type="monotone" dataKey="value" stroke="#aa3bff" fillOpacity={1} fill="url(#colorValue)" strokeWidth={2} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" opacity={0.1} />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 600}} />
+              <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: 'var(--text-secondary)', fontWeight: 600}} />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--color-border)', borderRadius: '12px', color: 'var(--text-primary)' }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
+              <Area type="monotone" dataKey="value" stroke="var(--color-primary)" fillOpacity={1} fill="url(#colorValue)" strokeWidth={3} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl border shadow-sm lg:col-span-2">
+      <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-[var(--color-border)]/10 shadow-sm lg:col-span-2 transition-colors duration-300">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold">Task Status Distribution</h3>
+          <h3 className="text-lg font-bold text-[var(--text-primary)]">Task Status Distribution</h3>
         </div>
-        <div className="h-64 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="h-64 grid grid-cols-1 md:grid-cols-2 gap-8">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={taskStatusData}
                 cx="50%"
                 cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
+                innerRadius={65}
+                outerRadius={85}
+                paddingAngle={8}
                 dataKey="value"
+                stroke="none"
               >
-                {taskStatusData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                {taskStatusData.map((_, index) => (
+                  <Cell key={`cell-${index}`} fill={index === 0 ? 'var(--color-primary)' : index === 1 ? 'var(--color-accent)' : 'var(--color-secondary)'} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip 
+                contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--color-border)', borderRadius: '12px', color: 'var(--text-primary)' }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
             </PieChart>
           </ResponsiveContainer>
-          <div className="flex flex-col justify-center space-y-4">
+          <div className="flex flex-col justify-center space-y-5">
             {taskStatusData.map((item, index) => (
-              <div key={item.name} className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                <span className="text-sm text-gray-600">{item.name}</span>
-                <span className="text-sm font-semibold ml-auto">{item.value} tasks</span>
+              <div key={item.name} className="flex items-center gap-4 group">
+                <div className="w-4 h-4 rounded-full shadow-sm shadow-black/10" style={{ backgroundColor: index === 0 ? 'var(--color-primary)' : index === 1 ? 'var(--color-accent)' : 'var(--color-secondary)' }} />
+                <span className="text-sm text-[var(--text-secondary)] font-bold group-hover:text-[var(--text-primary)] transition-colors">{item.name}</span>
+                <span className="text-sm font-black ml-auto text-[var(--text-primary)]">{item.value} <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">tasks</span></span>
               </div>
             ))}
           </div>

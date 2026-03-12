@@ -42,15 +42,15 @@ const NotificationBell: React.FC = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "relative p-2.5 rounded-xl transition-all duration-200 border",
+          "relative p-3 rounded-2xl transition-all duration-300 border",
           isOpen 
-            ? "bg-primary/10 border-primary text-primary shadow-inner" 
-            : "bg-white border-gray-100 text-gray-400 hover:text-gray-900 hover:border-gray-200 hover:shadow-sm"
+            ? "bg-[var(--color-primary)]/10 border-[var(--color-primary)] text-[var(--color-primary)] shadow-sm" 
+            : "bg-[var(--bg-main)]/50 border-[var(--color-border)]/10 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--color-primary)]/30 hover:shadow-md"
         )}
       >
-        <Bell className={cn("h-5 w-5", isOpen && "animate-none")} />
+        <Bell className={cn("h-5 w-5", isOpen && "scale-110")} />
         {unreadCount > 0 && (
-          <span className="absolute top-2 right-2 h-4 w-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white animate-in zoom-in-0 duration-300">
+          <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-[9px] font-black flex items-center justify-center rounded-xl border-2 border-[var(--bg-card)] shadow-lg animate-in zoom-in duration-500">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}

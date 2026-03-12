@@ -17,11 +17,11 @@ const Button: React.FC<ButtonProps> = ({
   const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
   
   const variants = {
-    primary: 'bg-primary text-white hover:bg-primary-dark focus:ring-primary/50 shadow-sm',
-    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 focus:ring-secondary/50',
-    outline: 'border border-gray-200 bg-transparent hover:bg-gray-50 text-gray-700',
-    ghost: 'bg-transparent hover:bg-gray-100 text-gray-700',
-    danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500/50 shadow-sm',
+    primary: 'bg-[var(--color-primary)] text-white hover:opacity-90 focus:ring-[var(--color-primary)]/50 shadow-sm active:scale-95',
+    secondary: 'bg-[var(--color-secondary)] text-white hover:opacity-90 focus:ring-[var(--color-secondary)]/50',
+    outline: 'border border-[var(--color-border)]/20 bg-transparent hover:bg-[var(--bg-main)] text-[var(--text-primary)]',
+    ghost: 'bg-transparent hover:bg-[var(--bg-main)] text-[var(--text-secondary)]',
+    danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500/50 shadow-sm active:scale-95',
   }
 
   const sizes = {

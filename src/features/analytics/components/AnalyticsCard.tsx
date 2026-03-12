@@ -12,15 +12,15 @@ interface AnalyticsCardProps {
 
 const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ title, subtitle, children, className, action }) => {
   return (
-    <div className={cn("bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-6", className)}>
+    <div className={cn("bg-[var(--bg-card)] p-6 rounded-2xl border border-[var(--color-border)]/10 shadow-sm flex flex-col gap-6 transition-colors duration-300", className)}>
       <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h3 className="text-base font-bold text-gray-900 leading-none">{title}</h3>
-          {subtitle && <p className="text-xs text-gray-400 font-medium">{subtitle}</p>}
+        <div className="space-y-1.5">
+          <h3 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-wider">{title}</h3>
+          {subtitle && <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest leading-tight">{subtitle}</p>}
         </div>
         <div className="flex items-center gap-2">
           {action}
-          <button className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors">
+          <button className="p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-main)] rounded-xl transition-all">
             <MoreVertical className="h-4 w-4" />
           </button>
         </div>

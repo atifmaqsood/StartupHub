@@ -27,12 +27,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
         className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200" 
         onClick={onClose} 
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+      <div className="relative bg-[var(--bg-card)] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200 border border-[var(--color-border)]/10">
+        <div className="flex items-center justify-between p-6 border-b border-[var(--color-border)]/10">
+          <h2 className="text-xl font-bold text-[var(--text-primary)]">{title}</h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400 hover:text-gray-600"
+            className="p-2 hover:bg-[var(--bg-main)] rounded-xl transition-all text-[var(--text-muted)] hover:text-[var(--text-primary)]"
           >
             <X className="w-5 h-5" />
           </button>

@@ -64,17 +64,17 @@ const ActivityFeedPage: React.FC = () => {
     <button
       onClick={() => setFilter(type)}
       className={cn(
-        "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all border",
+        "flex items-center gap-3 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border",
         filter === type 
-          ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105" 
-          : "bg-white text-gray-500 border-gray-100 hover:border-gray-200 hover:bg-gray-50"
+          ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/20 scale-105" 
+          : "bg-[var(--bg-main)] text-[var(--text-muted)] border-[var(--color-border)]/10 hover:border-[var(--color-primary)]/30 hover:text-[var(--text-primary)]"
       )}
     >
       <Icon className="h-4 w-4" />
       {label}
       <span className={cn(
-        "px-1.5 py-0.5 rounded-lg text-[10px] ml-1",
-        filter === type ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+        "px-2 py-0.5 rounded-lg text-[9px] ml-auto font-black",
+        filter === type ? "bg-white/20 text-white" : "bg-[var(--color-primary)]/10 text-[var(--color-primary)]"
       )}>
         {stats[type as keyof typeof stats]}
       </span>
@@ -82,49 +82,51 @@ const ActivityFeedPage: React.FC = () => {
   )
 
   return (
-    <div className="p-8 h-full space-y-8 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 flex items-center gap-3">
-            <Bell className="h-8 w-8 text-primary" />
+    <div className="p-8 h-full space-y-10 animate-in fade-in duration-700">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-black tracking-tight text-[var(--text-primary)] flex items-center gap-4">
+            <div className="p-3 bg-[var(--color-primary)]/10 rounded-2xl shadow-sm">
+              <Bell className="h-8 w-8 text-[var(--color-primary)]" />
+            </div>
             Activity Feed
           </h1>
-          <p className="text-gray-500 font-medium">Keep track of everything happening in your workspace.</p>
+          <p className="text-[var(--text-muted)] font-black uppercase tracking-widest text-[10px] pl-16">Keep track of everything happening in your workspace.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" onClick={handleMarkAllRead} className="h-11">
+          <Button variant="outline" onClick={handleMarkAllRead} className="h-12 px-6 ring-1 ring-[var(--color-border)]/10 font-black uppercase tracking-widest text-[10px]">
             <CheckCheck className="mr-2 h-4 w-4" />
             Mark All as Read
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
-            <div className="space-y-4">
-               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
+        <div className="lg:col-span-1 space-y-10">
+          <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--color-border)]/10 shadow-sm space-y-10 transition-colors duration-300">
+            <div className="space-y-6">
+               <h3 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] flex items-center gap-2.5">
                 <Filter className="h-3.5 w-3.5" />
-                Quick Filters
+                Intelligence Filters
                </h3>
-               <div className="grid grid-cols-1 gap-2">
-                 <FilterButton type="all" label="All Activity" icon={Calendar} />
-                 <FilterButton type="project" label="Projects" icon={Briefcase} />
-                 <FilterButton type="task" label="Tasks" icon={CheckCircle2} />
-                 <FilterButton type="crm" label="CRM" icon={Target} />
-                 <FilterButton type="team" label="Team" icon={Users} />
+               <div className="grid grid-cols-1 gap-3">
+                 <FilterButton type="all" label="Full Stream" icon={Calendar} />
+                 <FilterButton type="project" label="Project Ops" icon={Briefcase} />
+                 <FilterButton type="task" label="Workflow" icon={CheckCircle2} />
+                 <FilterButton type="crm" label="Pipeline" icon={Target} />
+                 <FilterButton type="team" label="Human Ops" icon={Users} />
                </div>
             </div>
             
-            <div className="pt-6 border-t border-gray-50 space-y-4">
-               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Search Log</h3>
+            <div className="pt-10 border-t border-[var(--color-border)]/5 space-y-6">
+               <h3 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">Global Index Search</h3>
                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]" />
                   <input
-                    placeholder="Search messages..."
+                    placeholder="Keywords..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 h-10 w-full rounded-xl border border-gray-100 bg-gray-50/50 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary transition-all"
+                    className="pl-12 h-12 w-full rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4 py-2 text-sm font-bold text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]/20 focus-visible:border-[var(--color-primary)] transition-all placeholder:text-[var(--text-muted)]"
                   />
                </div>
             </div>
@@ -132,16 +134,16 @@ const ActivityFeedPage: React.FC = () => {
         </div>
 
         <div className="lg:col-span-3">
-           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden min-h-[500px]">
+           <div className="bg-[var(--bg-card)] rounded-3xl border border-[var(--color-border)]/10 shadow-sm overflow-hidden min-h-[600px] transition-colors duration-300">
               {loading && items.length === 0 ? (
-                <div className="h-96 flex items-center justify-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                    <p className="text-sm font-medium text-gray-400">Syncing activity data...</p>
+                <div className="h-[600px] flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-6">
+                    <Loader2 className="h-12 w-12 animate-spin text-[var(--color-primary)]" />
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] animate-pulse">Syncing neural feed...</p>
                   </div>
                 </div>
               ) : filteredNotifications.length > 0 ? (
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-[var(--color-border)]/5">
                    {filteredNotifications.map(notif => (
                      <NotificationItem 
                         key={notif.id} 
@@ -156,13 +158,13 @@ const ActivityFeedPage: React.FC = () => {
                    ))}
                 </div>
               ) : (
-                <div className="h-96 flex flex-col items-center justify-center text-center p-8">
-                  <div className="p-4 bg-gray-50 rounded-full mb-4">
-                    <Bell className="h-10 w-10 text-gray-300" />
+                <div className="h-[600px] flex flex-col items-center justify-center text-center p-12">
+                  <div className="p-6 bg-[var(--bg-main)] rounded-3xl border border-[var(--color-border)]/10 mb-6 shadow-inner">
+                    <Bell className="h-12 w-12 text-[var(--text-muted)] opacity-20" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">No activity found</h3>
-                  <p className="text-sm text-gray-500 max-w-xs mt-2 font-medium">
-                    Try adjusting your filters or search query to find what you're looking for.
+                  <h3 className="text-xl font-black text-[var(--text-primary)] uppercase tracking-widest">Feed Empty</h3>
+                  <p className="text-xs text-[var(--text-muted)] max-w-sm mt-4 font-bold leading-relaxed">
+                    The intelligence stream currently has no data matching these parameters. Try refining your global search.
                   </p>
                 </div>
               )}

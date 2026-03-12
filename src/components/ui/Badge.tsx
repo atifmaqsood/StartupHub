@@ -14,11 +14,11 @@ interface BadgeProps {
 
 const Badge: React.FC<BadgeProps> = ({ children, variant = 'neutral', className }) => {
   const variants = {
-    success: 'bg-green-100 text-green-700 border-green-200',
-    warning: 'bg-orange-100 text-orange-700 border-orange-200',
-    error: 'bg-red-100 text-red-700 border-red-200',
-    info: 'bg-blue-100 text-blue-700 border-blue-200',
-    neutral: 'bg-gray-100 text-gray-700 border-gray-200',
+    success: 'bg-green-500/10 text-green-500 border-green-500/20',
+    warning: 'bg-orange-500/10 text-orange-500 border-orange-500/20',
+    error: 'bg-red-500/10 text-red-500 border-red-500/20',
+    info: 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] border-[var(--color-primary)]/20',
+    neutral: 'bg-gray-500/10 text-gray-500 border-gray-500/20',
   }
 
   return (

@@ -51,8 +51,8 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-all group hover:border-primary/30",
-        isDragging && "ring-2 ring-primary border-transparent scale-[1.02]"
+        "bg-[var(--bg-card)] p-5 rounded-2xl border border-[var(--color-border)]/10 shadow-sm transition-all group hover:border-[var(--color-primary)]/30",
+        isDragging && "ring-2 ring-[var(--color-primary)] border-transparent scale-[1.02]"
       )}
     >
       <div className="flex items-start justify-between mb-4">
@@ -60,39 +60,39 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
           <button 
             {...listeners} 
             {...attributes} 
-            className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-400 p-0.5 rounded transition-colors"
+            className="cursor-grab active:cursor-grabbing text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg transition-colors"
           >
             <GripVertical className="h-4 w-4" />
           </button>
-          <Badge variant={getSourceBadgeVariant(lead.source)} className="text-[10px] uppercase font-bold px-2">
+          <Badge variant={getSourceBadgeVariant(lead.source)} className="text-[10px] uppercase font-black px-2.5 py-0.5">
             {lead.source || 'General'}
           </Badge>
         </div>
-        <button className="text-gray-400 hover:text-gray-600 transition-colors">
+        <button className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors p-1">
           <MoreVertical className="h-4 w-4" />
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <Link to={`/crm/${lead.id}`} virtual-href={`/crm/${lead.id}`} className="block">
-          <h4 className="text-base font-bold text-gray-900 line-clamp-1 group-hover:text-primary transition-colors flex items-center gap-1.5">
+          <h4 className="text-base font-bold text-[var(--text-primary)] line-clamp-1 group-hover:text-[var(--color-primary)] transition-colors flex items-center gap-2">
             {lead.name}
             <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
           </h4>
         </Link>
         
-        <div className="flex items-center gap-1.5 text-sm text-gray-500">
+        <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
           <Building2 className="h-3.5 w-3.5" />
-          <span className="font-medium truncate">{lead.company}</span>
+          <span className="font-bold truncate">{lead.company}</span>
         </div>
 
-        <div className="flex flex-col gap-1.5 pt-1">
-          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+        <div className="flex flex-col gap-2 pt-1 border-l-2 border-[var(--color-border)]/10 pl-3">
+          <div className="flex items-center gap-2 text-[11px] font-medium text-[var(--text-muted)]">
             <Mail className="h-3 w-3" />
             <span className="truncate">{lead.email}</span>
           </div>
           {lead.phone && (
-            <div className="flex items-center gap-1.5 text-xs text-gray-400">
+            <div className="flex items-center gap-2 text-[11px] font-medium text-[var(--text-muted)]">
               <Phone className="h-3 w-3" />
               <span>{lead.phone}</span>
             </div>
@@ -100,13 +100,13 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-50">
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-[var(--color-border)]/5">
         <div className="flex flex-col">
-          <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Value</span>
-          <span className="text-sm font-bold text-gray-900">{formatCurrency(lead.value)}</span>
+          <span className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-wider">Potential</span>
+          <span className="text-sm font-black text-[var(--text-primary)]">{formatCurrency(lead.value)}</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-gray-600">
+          <div className="w-8 h-8 rounded-full bg-[var(--bg-main)] border-2 border-[var(--bg-card)] shadow-sm flex items-center justify-center text-[10px] font-black text-[var(--color-primary)] overflow-hidden">
             {lead.assignedTo?.charAt(0) || <User className="h-3 w-3" />}
           </div>
         </div>
