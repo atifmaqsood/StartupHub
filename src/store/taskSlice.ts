@@ -6,8 +6,10 @@ interface Task {
   projectId: string
   title: string
   assignee: string
-  status: string
+  status: 'Todo' | 'In Progress' | 'Review' | 'Completed'
+  priority: 'Low' | 'Medium' | 'High'
   dueDate: string
+  projectName?: string
 }
 
 interface TaskState {
@@ -32,7 +34,7 @@ const taskSlice = createSlice({
       state.loading = action.payload
     },
     addTask: (state, action: PayloadAction<Task>) => {
-      state.items.push(action.payload)
+      state.items.unshift(action.payload)
     },
     updateTask: (state, action: PayloadAction<Task>) => {
       const index = state.items.findIndex(t => t.id === action.payload.id)
@@ -40,8 +42,20 @@ const taskSlice = createSlice({
         state.items[index] = action.payload
       }
     },
+    deleteTask: (state, action: PayloadAction<string>) => {
+      state.items = state.items.filter(t => t.id !== action.payload)
+    },
+    moveTask: (state, action: PayloadAction<{ id: string; status: Task['status'] }>) => {
+      const task = state.items.find(t => t.id === action.payload.id)
+      if (task) {
+        task.status = action.payload.status
+      }
+    },
+    reorderTasks: (state, action: PayloadAction<Task[]>) => {
+      state.items = action.payload
+    },
   },
 })
 
-export const { setTasks, setLoading, addTask, updateTask } = taskSlice.actions
+export const { setTasks, setLoading, addTask, updateTask, deleteTask, moveTask, reorderTasks } = taskSlice.actions
 export default taskSlice.reducer

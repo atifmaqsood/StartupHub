@@ -11,6 +11,9 @@ import LoginPage from '../pages/auth/LoginPage.tsx'
 import RegisterPage from '../pages/auth/RegisterPage.tsx'
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage.tsx'
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage.tsx'
+import TasksPage from '../pages/tasks/index.tsx'
+import TaskDetailsPage from '../pages/tasks/details.tsx'
+import ErrorPage from '../pages/ErrorPage.tsx'
 
 // Placeholder components
 const Placeholder = ({ name }: { name: string }) => (
@@ -24,10 +27,12 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <Navigate to="/dashboard" replace />,
+    errorElement: <ErrorPage />,
   },
   {
     path: '/dashboard',
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
@@ -41,6 +46,7 @@ export const router = createBrowserRouter([
   {
     path: '/projects',
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
@@ -54,12 +60,13 @@ export const router = createBrowserRouter([
   {
     path: '/tasks',
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
         children: [
-          { index: true, element: <Placeholder name="Tasks List" /> },
-          { path: 'create', element: <Placeholder name="Create Task" /> },
+          { index: true, element: <TasksPage /> },
+          { path: ':id', element: <TaskDetailsPage /> },
         ]
       }
     ],
@@ -67,6 +74,7 @@ export const router = createBrowserRouter([
   {
     path: '/crm',
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
@@ -133,6 +141,7 @@ export const router = createBrowserRouter([
   {
     path: '/auth',
     element: <AuthLayout />,
+    errorElement: <ErrorPage />,
     children: [
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
