@@ -1,41 +1,91 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { User, Mail, Briefcase, FileText, Camera, Loader2, Check } from 'lucide-react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux'
 import { updateProfile } from '../../store/settingsSlice'
+import { setUser } from '../../store/authSlice'
+import { authService } from '../../services/authService'
 import { useForm } from 'react-hook-form'
 
 const ProfilePage: React.FC = () => {
   const dispatch = useAppDispatch()
   const profile = useAppSelector(state => state.settings.profile)
+  const user = useAppSelector(state => state.auth.user)
   const [isSaving, setIsSaving] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatar)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const { register, handleSubmit, reset } = useForm({
     defaultValues: profile
   })
 
+  // Sync avatarUrl when profile changes or on mount
+  useEffect(() => {
+    setAvatarUrl(profile.avatar)
+  }, [profile.avatar])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setAvatarUrl(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click()
+  }
+
   const onFormSubmit = async (data: any) => {
     setIsSaving(true)
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800))
-    dispatch(updateProfile(data))
-    setIsSaving(false)
-    setShowSuccess(true)
-    setTimeout(() => setShowSuccess(false), 3000)
+    
+    const updatedData = { ...data, avatar: avatarUrl }
+
+    try {
+      if (user?.id) {
+        const updatedAuthUser = await authService.updateUser(user.id, {
+          name: updatedData.name,
+          email: updatedData.email,
+          avatar: updatedData.avatar
+        })
+        if (updatedAuthUser) {
+           // @ts-ignore
+           dispatch(setUser(updatedAuthUser))
+        }
+      }
+      
+      dispatch(updateProfile(updatedData))
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 3000)
+    } catch (error) {
+      console.error('Failed to update profile', error)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="p-8 space-y-10 animate-in slide-in-from-bottom-2 duration-500">
       <div className="flex items-center gap-8 pb-10 border-b border-[var(--color-border)]/5">
-        <div className="relative group">
+        <div className="relative group" onClick={triggerFileInput}>
           <img 
-            src={profile.avatar} 
+            src={avatarUrl} 
             alt="Avatar" 
-            className="h-24 w-24 rounded-2xl object-cover ring-4 ring-[var(--bg-main)] group-hover:ring-[var(--color-primary)]/20 transition-all cursor-pointer shadow-lg"
+            className="h-24 w-24 rounded-2xl object-cover ring-4 ring-[var(--bg-main)] group-hover:ring-[var(--color-primary)]/20 transition-all cursor-pointer shadow-lg bg-[var(--bg-card)]"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
             <Camera className="h-6 w-6 text-white" />
           </div>
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileChange} 
+            accept="image/*" 
+            className="hidden" 
+          />
         </div>
         <div className="space-y-2">
           <h2 className="text-xl font-black text-[var(--text-primary)] tracking-tight">Identity & Profile</h2>
@@ -93,7 +143,7 @@ const ProfilePage: React.FC = () => {
       <div className="flex justify-end gap-4 pt-10 border-t border-[var(--color-border)]/5">
         <button 
           type="button" 
-          onClick={() => reset()}
+          onClick={() => { reset(); setAvatarUrl(profile.avatar); }}
           className="px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-main)] transition-all"
         >
           Discard

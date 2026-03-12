@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { setUser } from './authSlice'
 
 export interface ThemeColors {
   primary: string
@@ -180,6 +181,19 @@ const settingsSlice = createSlice({
       localStorage.setItem(SETTINGS_KEY, JSON.stringify(state))
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(setUser, (state, action) => {
+      if (action.payload) {
+        state.profile = {
+          ...state.profile,
+          name: action.payload.name || state.profile.name,
+          email: action.payload.email || state.profile.email,
+          avatar: action.payload.avatar || state.profile.avatar,
+        }
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(state))
+      }
+    })
+  }
 })
 
 export const { 

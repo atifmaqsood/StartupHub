@@ -76,5 +76,29 @@ export const authService = {
     return new Promise((resolve) => {
       setTimeout(() => resolve({ message: 'Password reset successful' }), 1000)
     })
+  },
+
+  updateUser: (id: string, updates: any) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const index = users.findIndex((u: any) => String(u.id) === String(id))
+        if (index !== -1) {
+          users[index] = { ...users[index], ...updates }
+          saveToDb()
+          
+          // Also update the current session if it's the active user
+          const savedUser = localStorage.getItem('user_session')
+          if (savedUser) {
+            const currentUser = JSON.parse(savedUser)
+            if (String(currentUser.id) === String(id)) {
+              localStorage.setItem('user_session', JSON.stringify(users[index]))
+            }
+          }
+          resolve(users[index])
+        } else {
+          reject(new Error('User not found'))
+        }
+      }, 500)
+    })
   }
 }
