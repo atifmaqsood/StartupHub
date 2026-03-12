@@ -1,12 +1,16 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import DashboardLayout from '../layouts/DashboardLayout'
-import AuthLayout from '../layouts/AuthLayout'
-import DashboardOverview from '../pages/dashboard'
-import LoginPage from '../pages/auth/LoginPage'
-import RegisterPage from '../pages/auth/RegisterPage'
-import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage'
-import ResetPasswordPage from '../pages/auth/ResetPasswordPage'
-import ProtectedRoute from './ProtectedRoute'
+import DashboardLayout from '../layouts/DashboardLayout/index.tsx'
+import AuthLayout from '../layouts/AuthLayout/index.tsx'
+import ProtectedRoute from './ProtectedRoute.tsx'
+
+// Pages
+import DashboardOverview from '../pages/dashboard/index.tsx'
+import ProjectsPage from '../pages/projects/index.tsx'
+import ProjectDetailsPage from '../pages/projects/details.tsx'
+import LoginPage from '../pages/auth/LoginPage.tsx'
+import RegisterPage from '../pages/auth/RegisterPage.tsx'
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage.tsx'
+import ResetPasswordPage from '../pages/auth/ResetPasswordPage.tsx'
 
 // Placeholder components
 const Placeholder = ({ name }: { name: string }) => (
@@ -41,10 +45,8 @@ export const router = createBrowserRouter([
       {
         element: <DashboardLayout />,
         children: [
-          { index: true, element: <Placeholder name="Projects List" /> },
-          { path: 'create', element: <Placeholder name="Create Project" /> },
-          { path: ':id', element: <Placeholder name="Project Details" /> },
-          { path: ':id/edit', element: <Placeholder name="Edit Project" /> },
+          { index: true, element: <ProjectsPage /> },
+          { path: ':id', element: <ProjectDetailsPage /> },
         ]
       }
     ],

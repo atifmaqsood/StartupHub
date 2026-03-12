@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
 interface Task {
   id: string
@@ -25,6 +26,10 @@ const taskSlice = createSlice({
   reducers: {
     setTasks: (state, action: PayloadAction<Task[]>) => {
       state.items = action.payload
+      state.loading = false
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload
     },
     addTask: (state, action: PayloadAction<Task>) => {
       state.items.push(action.payload)
@@ -38,5 +43,5 @@ const taskSlice = createSlice({
   },
 })
 
-export const { setTasks, addTask, updateTask } = taskSlice.actions
+export const { setTasks, setLoading, addTask, updateTask } = taskSlice.actions
 export default taskSlice.reducer

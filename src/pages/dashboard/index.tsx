@@ -1,96 +1,121 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useAppSelector, useAppDispatch } from '../../hooks/redux.ts'
+import { setProjects, setLoading as setProjectsLoading } from '../../store/projectSlice.ts'
+import { setTasks, setLoading as setTasksLoading } from '../../store/taskSlice.ts'
+import { setLeads, setLoading as setLeadsLoading } from '../../store/crmSlice.ts'
+import { projectService } from '../../services/projectService.ts'
+import { taskService } from '../../services/taskService.ts'
+import { crmService } from '../../services/crmService.ts'
+import StatCard from '../../components/cards/StatCard.tsx'
+import DashboardCharts from '../../features/dashboard/components/DashboardCharts.tsx'
 import { 
   Briefcase, 
-  CheckCircle, 
-  Clock, 
+  CheckSquare, 
   Users, 
-  TrendingUp 
+  TrendingUp, 
+  Target,
+  Loader2
 } from 'lucide-react'
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  AreaChart,
-  Area
-} from 'recharts'
-import StatCard from '../../components/cards/StatCard'
-
-const data = [
-  { name: 'Jan', value: 400 },
-  { name: 'Feb', value: 300 },
-  { name: 'Mar', value: 600 },
-  { name: 'Apr', value: 800 },
-  { name: 'May', value: 500 },
-  { name: 'Jun', value: 900 },
-]
-
-const activityData = [
-  { name: 'Mon', tasks: 12 },
-  { name: 'Tue', tasks: 19 },
-  { name: 'Wed', tasks: 15 },
-  { name: 'Thu', tasks: 22 },
-  { name: 'Fri', tasks: 30 },
-  { name: 'Sat', tasks: 10 },
-  { name: 'Sun', tasks: 8 },
-]
 
 const DashboardOverview: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const { items: projects, loading: projectsLoading } = useAppSelector((state) => state.projects)
+  const { items: tasks, loading: tasksLoading } = useAppSelector((state) => state.tasks)
+  const { leads, loading: leadsLoading } = useAppSelector((state) => state.crm)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(setProjectsLoading(true))
+      dispatch(setTasksLoading(true))
+      dispatch(setLeadsLoading(true))
+
+      try {
+        const [projectsData, tasksData, leadsData] = await Promise.all([
+          projectService.getProjects(),
+          taskService.getTasks(),
+          crmService.getLeads()
+        ])
+
+        dispatch(setProjects(projectsData as any))
+        dispatch(setTasks(tasksData as any))
+        dispatch(setLeads(leadsData as any))
+      } catch (error) {
+        console.error('Failed to fetch dashboard data', error)
+      } finally {
+        dispatch(setProjectsLoading(false))
+        dispatch(setTasksLoading(false))
+        dispatch(setLeadsLoading(false))
+      }
+    }
+
+    fetchData()
+  }, [dispatch])
+
+  const isLoading = projectsLoading || tasksLoading || leadsLoading
+
+  if (isLoading && projects.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  // Calculate stats
+  const totalProjects = projects.length
+  const totalTasks = tasks.length
+  const completedTasks = tasks.filter(t => t.status === 'Completed').length
+  const totalLeads = leads.length
+  const activeMembers = 12 // Mock data for now
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <div className="text-sm text-gray-500">Welcome back, Alex</div>
+    <div className="p-8 space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+        <p className="text-gray-500">Welcome back to StartupHub. Here's what's happening with your projects today.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <StatCard title="Total Projects" value="12" icon={Briefcase} trend="+2 this month" color="bg-blue-500" />
-        <StatCard title="Total Tasks" value="48" icon={Clock} trend="+5 today" color="bg-orange-500" />
-        <StatCard title="Completed" value="32" icon={CheckCircle} trend="85% rate" color="bg-green-500" />
-        <StatCard title="Active Members" value="8" icon={Users} trend="4 online" color="bg-purple-500" />
-        <StatCard title="Total Leads" value="$42,500" icon={TrendingUp} trend="+12% growth" color="bg-pink-500" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <StatCard 
+          title="Total Projects" 
+          value={totalProjects} 
+          icon={Briefcase} 
+          trend="+20.1%" 
+          trendType="up" 
+        />
+        <StatCard 
+          title="Total Tasks" 
+          value={totalTasks} 
+          icon={CheckSquare} 
+          trend="+15%" 
+          trendType="up" 
+        />
+        <StatCard 
+          title="Completed" 
+          value={completedTasks} 
+          icon={Target} 
+          trend="+5.4%" 
+          trendType="up" 
+        />
+        <StatCard 
+          title="Total Leads" 
+          value={totalLeads} 
+          icon={TrendingUp} 
+          trend="+12%" 
+          trendType="up" 
+        />
+        <StatCard 
+          title="Active Team" 
+          value={activeMembers} 
+          icon={Users} 
+        />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl border shadow-sm">
-          <h3 className="text-lg font-semibold mb-6">Revenue Growth</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
-                <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#aa3bff" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#aa3bff" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-                <Tooltip />
-                <Area type="monotone" dataKey="value" stroke="#aa3bff" fillOpacity={1} fill="url(#colorValue)" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-xl border shadow-sm">
-          <h3 className="text-lg font-semibold mb-6">Task Activity</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={activityData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12}} />
-                <Tooltip />
-                <Bar dataKey="tasks" fill="#ff9800" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+      <DashboardCharts 
+        projects={projects} 
+        tasks={tasks} 
+        leads={leads} 
+      />
     </div>
   )
 }

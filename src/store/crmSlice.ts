@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
 interface Lead {
   id: string
@@ -25,6 +26,10 @@ const crmSlice = createSlice({
   reducers: {
     setLeads: (state, action: PayloadAction<Lead[]>) => {
       state.leads = action.payload
+      state.loading = false
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload
     },
     addLead: (state, action: PayloadAction<Lead>) => {
       state.leads.push(action.payload)
@@ -38,5 +43,5 @@ const crmSlice = createSlice({
   },
 })
 
-export const { setLeads, addLead, updateLead } = crmSlice.actions
+export const { setLeads, setLoading, addLead, updateLead } = crmSlice.actions
 export default crmSlice.reducer

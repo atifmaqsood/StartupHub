@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
 interface Project {
   id: string
@@ -26,6 +27,10 @@ const projectSlice = createSlice({
   reducers: {
     setProjects: (state, action: PayloadAction<Project[]>) => {
       state.items = action.payload
+      state.loading = false
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload
     },
     addProject: (state, action: PayloadAction<Project>) => {
       state.items.push(action.payload)
@@ -39,5 +44,5 @@ const projectSlice = createSlice({
   },
 })
 
-export const { setProjects, addProject, updateProject } = projectSlice.actions
+export const { setProjects, setLoading, addProject, updateProject } = projectSlice.actions
 export default projectSlice.reducer
