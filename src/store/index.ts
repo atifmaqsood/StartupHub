@@ -1,16 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authReducer from './authSlice'
-import projectReducer from './projectSlice'
-import taskReducer from './taskSlice'
-import crmReducer from './crmSlice'
+import authReducer from './authSlice.ts'
+import projectReducer from './projectSlice.ts'
+import taskReducer from './taskSlice.ts'
+import crmReducer from './crmSlice.ts'
+
+const reducers = {
+  auth: authReducer,
+  projects: projectReducer,
+  tasks: taskReducer,
+  crm: crmReducer,
+}
 
 export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    projects: projectReducer,
-    tasks: taskReducer,
-    crm: crmReducer,
-  },
+  reducer: reducers,
 })
 
 export type RootState = ReturnType<typeof store.getState>
