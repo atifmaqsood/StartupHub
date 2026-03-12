@@ -18,13 +18,13 @@ import {
   Clock,
   ExternalLink
 } from 'lucide-react'
-import { useDispatch } from 'react-redux'
-import { removeMember } from '../../store/teamSlice.ts'
+import { useAppDispatch } from '../../hooks/redux.ts'
+import { deleteMemberAsync, optimisticRemoveMember } from '../../store/teamSlice.ts'
 
 const MemberProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [member, setMember] = useState<any>(null)
   const [assignedProjects, setAssignedProjects] = useState<any[]>([])
   const [assignedTasks, setAssignedTasks] = useState<any[]>([])
@@ -54,15 +54,11 @@ const MemberProfilePage: React.FC = () => {
     fetchMemberData()
   }, [id])
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!id || !window.confirm(`Are you sure you want to remove ${member?.name} from the team?`)) return
-    try {
-      await teamService.deleteMember(id)
-      dispatch(removeMember(id))
-      navigate('/team')
-    } catch (error) {
-      console.error('Failed to delete member', error)
-    }
+    dispatch(optimisticRemoveMember(id))
+    dispatch(deleteMemberAsync(id))
+    navigate('/team')
   }
 
   if (loading) {

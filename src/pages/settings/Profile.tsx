@@ -1,13 +1,35 @@
-import React from 'react'
-import { User, Mail, Briefcase, FileText, Camera } from 'lucide-react'
+import React, { useState } from 'react'
+import { User, Mail, Briefcase, FileText, Camera, Loader2, Check } from 'lucide-react'
+import { useAppSelector, useAppDispatch } from '../../hooks/redux'
+import { updateProfile } from '../../store/settingsSlice'
+import { useForm } from 'react-hook-form'
 
 const ProfilePage: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const profile = useAppSelector(state => state.settings.profile)
+  const [isSaving, setIsSaving] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: profile
+  })
+
+  const onFormSubmit = async (data: any) => {
+    setIsSaving(true)
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 800))
+    dispatch(updateProfile(data))
+    setIsSaving(false)
+    setShowSuccess(true)
+    setTimeout(() => setShowSuccess(false), 3000)
+  }
+
   return (
-    <div className="p-8 space-y-10 animate-in slide-in-from-bottom-2 duration-500">
+    <form onSubmit={handleSubmit(onFormSubmit)} className="p-8 space-y-10 animate-in slide-in-from-bottom-2 duration-500">
       <div className="flex items-center gap-8 pb-10 border-b border-[var(--color-border)]/5">
         <div className="relative group">
           <img 
-            src="https://i.pravatar.cc/150?u=alex" 
+            src={profile.avatar} 
             alt="Avatar" 
             className="h-24 w-24 rounded-2xl object-cover ring-4 ring-[var(--bg-main)] group-hover:ring-[var(--color-primary)]/20 transition-all cursor-pointer shadow-lg"
           />
@@ -28,7 +50,7 @@ const ProfilePage: React.FC = () => {
             <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]" />
             <input 
               type="text" 
-              defaultValue="Alex Riviera"
+              {...register('name')}
               className="w-full pl-12 pr-4 py-3 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 focus:border-[var(--color-primary)] transition-all placeholder:text-[var(--text-muted)]"
             />
           </div>
@@ -39,7 +61,7 @@ const ProfilePage: React.FC = () => {
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]" />
             <input 
               type="email" 
-              defaultValue="alex@startuphub.com"
+              {...register('email')}
               className="w-full pl-12 pr-4 py-3 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 focus:border-[var(--color-primary)] transition-all placeholder:text-[var(--text-muted)]"
             />
           </div>
@@ -50,7 +72,7 @@ const ProfilePage: React.FC = () => {
             <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--text-muted)]" />
             <input 
               type="text" 
-              defaultValue="Founder & CEO"
+              {...register('title')}
               className="w-full pl-12 pr-4 py-3 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 focus:border-[var(--color-primary)] transition-all placeholder:text-[var(--text-muted)]"
             />
           </div>
@@ -61,7 +83,7 @@ const ProfilePage: React.FC = () => {
             <FileText className="absolute left-4 top-4 h-4 w-4 text-[var(--text-muted)]" />
             <textarea 
               rows={4}
-              defaultValue="Serial entrepreneur and product design enthusiast. Building the future of SAAS orchestration."
+              {...register('bio')}
               className="w-full pl-12 pr-4 py-4 rounded-2xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 focus:border-[var(--color-primary)] transition-all resize-none placeholder:text-[var(--text-muted)]"
             />
           </div>
@@ -69,10 +91,23 @@ const ProfilePage: React.FC = () => {
       </div>
 
       <div className="flex justify-end gap-4 pt-10 border-t border-[var(--color-border)]/5">
-        <button className="px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-main)] transition-all">Discard</button>
-        <button className="px-8 py-3 bg-[var(--color-primary)] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-[var(--color-primary)]/20 hover:shadow-xl hover:translate-y-[-1px] transition-all active:scale-95">Synchronize Changes</button>
+        <button 
+          type="button" 
+          onClick={() => reset()}
+          className="px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-main)] transition-all"
+        >
+          Discard
+        </button>
+        <button 
+          type="submit" 
+          disabled={isSaving}
+          className="px-8 py-3 bg-[var(--color-primary)] text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-[var(--color-primary)]/20 hover:shadow-xl hover:translate-y-[-1px] transition-all active:scale-95 disabled:opacity-70 flex items-center gap-2"
+        >
+          {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : showSuccess ? <Check className="h-4 w-4" /> : null}
+          {isSaving ? 'Synchronizing...' : showSuccess ? 'Synchronized' : 'Synchronize Changes'}
+        </button>
       </div>
-    </div>
+    </form>
   )
 }
 

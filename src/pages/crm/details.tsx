@@ -18,13 +18,13 @@ import {
   MessageSquare,
   Calendar
 } from 'lucide-react'
-import { useDispatch } from 'react-redux'
-import { deleteLead } from '../../store/crmSlice.ts'
+import { useAppDispatch } from '../../hooks/redux.ts'
+import { deleteLeadAsync, optimisticDeleteLead } from '../../store/crmSlice.ts'
 
 const LeadDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [lead, setLead] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -44,15 +44,11 @@ const LeadDetailsPage: React.FC = () => {
     fetchLead()
   }, [id])
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!id || !window.confirm('Are you sure you want to delete this lead?')) return
-    try {
-      await crmService.deleteLead(id)
-      dispatch(deleteLead(id))
-      navigate('/crm')
-    } catch (error) {
-      console.error('Failed to delete lead', error)
-    }
+    dispatch(optimisticDeleteLead(id))
+    dispatch(deleteLeadAsync(id))
+    navigate('/crm')
   }
 
   if (loading) {

@@ -1,113 +1,60 @@
-import leadsData from '../data/leads.json'
+import { mockDB } from './mockDatabaseService';
 import { notificationService } from './notificationService.ts'
 
-const LEADS_DB_KEY = 'startuphub_leads_db'
-
-const getInitialLeads = () => {
-  const savedDb = localStorage.getItem(LEADS_DB_KEY)
-  if (savedDb) return JSON.parse(savedDb)
-  localStorage.setItem(LEADS_DB_KEY, JSON.stringify(leadsData))
-  return [...leadsData]
-}
-
-let leads = getInitialLeads()
-
-const saveToDb = () => {
-  localStorage.setItem(LEADS_DB_KEY, JSON.stringify(leads))
-}
-
 export const crmService = {
-  getLeads: () => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve([...leads]), 500)
-    })
+  getLeads: async () => {
+    return mockDB.getAll('leads');
   },
 
-  getLeadById: (id: string) => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve(leads.find((l: any) => l.id === id)), 500)
-    })
+  getLeadById: async (id: string) => {
+    return mockDB.getById('leads', id);
   },
 
-  createLead: (leadData: any) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const newLead = {
-          id: `lead${Date.now()}`,
-          ...leadData,
-          createdAt: new Date().toISOString(),
-        }
-        leads.unshift(newLead)
-        saveToDb()
+  createLead: async (leadData: any) => {
+    const newLead = await mockDB.create('leads', {
+      ...leadData,
+      createdAt: new Date().toISOString(),
+    });
 
-        notificationService.createNotification({
-          type: 'crm',
-          message: `Alex added new lead '${newLead.name}' from ${newLead.source}`,
-          entityId: newLead.id,
-          entityType: 'Lead',
-          userId: '1',
-          userName: 'Alex Riviera',
-          userAvatar: 'https://i.pravatar.cc/150?u=alex'
-        })
+    await notificationService.createNotification({
+      type: 'crm',
+      message: `Alex added new lead '${newLead.name}' from ${newLead.source}`,
+      entityId: newLead.id,
+      entityType: 'Lead',
+      userId: '1',
+      userName: 'Alex Riviera',
+      userAvatar: 'https://i.pravatar.cc/150?u=alex'
+    });
 
-        resolve(newLead)
-      }, 500)
-    })
+    return newLead;
   },
 
-  updateLead: (id: string, leadData: any) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = leads.findIndex((l: any) => l.id === id)
-        if (index !== -1) {
-          const oldStatus = leads[index].status
-          leads[index] = { ...leads[index], ...leadData }
-          const newStatus = leads[index].status
-          
-          saveToDb()
+  updateLead: async (id: string, leadData: any) => {
+    const oldLead = await mockDB.getById('leads', id);
+    if (!oldLead) throw new Error('Lead not found');
 
-          if (oldStatus !== newStatus) {
-            notificationService.createNotification({
-              type: 'crm',
-              message: `Alex moved lead '${leads[index].name}' to ${newStatus}`,
-              entityId: id,
-              entityType: 'Lead',
-              userId: '1',
-              userName: 'Alex Riviera',
-              userAvatar: 'https://i.pravatar.cc/150?u=alex'
-            })
-          }
+    const updatedLead = await mockDB.update('leads', id, leadData);
+    
+    if (oldLead.status !== updatedLead.status) {
+      await notificationService.createNotification({
+        type: 'crm',
+        message: `Alex moved lead '${updatedLead.name}' to ${updatedLead.status}`,
+        entityId: id,
+        entityType: 'Lead',
+        userId: '1',
+        userName: 'Alex Riviera',
+        userAvatar: 'https://i.pravatar.cc/150?u=alex'
+      });
+    }
 
-          resolve(leads[index])
-        } else {
-          reject(new Error('Lead not found'))
-        }
-      }, 500)
-    })
+    return updatedLead;
   },
 
-  deleteLead: (id: string) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = leads.findIndex((l: any) => l.id === id)
-        if (index !== -1) {
-          leads.splice(index, 1)
-          saveToDb()
-          resolve(true)
-        } else {
-          reject(new Error('Lead not found'))
-        }
-      }, 500)
-    })
+  deleteLead: async (id: string) => {
+    return mockDB.delete('leads', id);
   },
 
-  reorderLeads: (newLeads: any[]) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        leads = [...newLeads]
-        saveToDb()
-        resolve(leads)
-      }, 500)
-    })
+  reorderLeads: async (newLeads: any[]) => {
+    return mockDB.bulkUpdate('leads', newLeads);
   }
 }

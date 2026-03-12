@@ -15,13 +15,13 @@ import {
   CheckCircle2,
   Briefcase
 } from 'lucide-react'
-import { useDispatch } from 'react-redux'
-import { deleteTask, updateTask } from '../../store/taskSlice.ts'
+import { useAppDispatch } from '../../hooks/redux.ts'
+import { deleteTaskAsync, updateTaskAsync, optimisticDeleteTask, optimisticUpdateTask } from '../../store/taskSlice.ts'
 
 const TaskDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [task, setTask] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -41,26 +41,19 @@ const TaskDetailsPage: React.FC = () => {
     fetchTask()
   }, [id])
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!id || !window.confirm('Are you sure you want to delete this task?')) return
-    try {
-      await taskService.deleteTask(id)
-      dispatch(deleteTask(id))
-      navigate('/tasks')
-    } catch (error) {
-      console.error('Failed to delete task', error)
-    }
+    dispatch(optimisticDeleteTask(id))
+    dispatch(deleteTaskAsync(id))
+    navigate('/tasks')
   }
 
-  const handleStatusChange = async (newStatus: string) => {
+  const handleStatusChange = (newStatus: any) => {
     if (!id || !task) return
-    try {
-      const updated = await taskService.updateTask(id, { status: newStatus })
-      setTask(updated)
-      dispatch(updateTask(updated as any))
-    } catch (error) {
-      console.error('Failed to update status', error)
-    }
+    const updates = { status: newStatus }
+    setTask({ ...task, ...updates })
+    dispatch(optimisticUpdateTask({ id, updates }))
+    dispatch(updateTaskAsync({ id, data: updates }))
   }
 
   if (loading) {

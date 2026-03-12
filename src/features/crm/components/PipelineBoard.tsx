@@ -12,9 +12,8 @@ import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import PipelineColumn from './PipelineColumn.tsx'
 import LeadCard from './LeadCard.tsx'
-import { useDispatch } from 'react-redux'
-import { reorderLeads } from '../../../store/crmSlice.ts'
-import { crmService } from '../../../services/crmService.ts'
+import { useAppDispatch } from '../../../hooks/redux.ts'
+import { reorderLeadsAsync, optimisticReorderLeads } from '../../../store/crmSlice.ts'
 
 interface PipelineBoardProps {
   leads: any[]
@@ -29,7 +28,7 @@ const STAGES = [
 ]
 
 const PipelineBoard: React.FC<PipelineBoardProps> = ({ leads }) => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [activeLead, setActiveLead] = useState<any>(null)
 
   const sensors = useSensors(
@@ -74,10 +73,10 @@ const PipelineBoard: React.FC<PipelineBoardProps> = ({ leads }) => {
     const updatedLead = { ...newLeads[activeIndex], status: overContainer }
     newLeads[activeIndex] = updatedLead
     
-    dispatch(reorderLeads(newLeads))
+    dispatch(optimisticReorderLeads(newLeads))
   }
 
-  const handleDragEnd = async (event: DragEndEvent) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     setActiveLead(null)
 
@@ -108,13 +107,8 @@ const PipelineBoard: React.FC<PipelineBoardProps> = ({ leads }) => {
         newLeads.push(updatedLead)
       }
 
-      dispatch(reorderLeads(newLeads))
-      
-      try {
-        await crmService.reorderLeads(newLeads)
-      } catch (error) {
-        console.error('Failed to persist lead reorder', error)
-      }
+      dispatch(optimisticReorderLeads(newLeads))
+      dispatch(reorderLeadsAsync(newLeads))
     }
   }
 

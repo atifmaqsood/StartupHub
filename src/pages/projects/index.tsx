@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux.ts'
-import { setProjects, setLoading, addProject } from '../../store/projectSlice.ts'
-import { projectService } from '../../services/projectService.ts'
+import { fetchProjects, createProject, deleteProjectAsync } from '../../store/projectSlice.ts'
 import { DataTable } from '../../components/tables/DataTable.tsx'
 import Button from '../../components/ui/Button.tsx'
 import Badge from '../../components/ui/Badge.tsx'
 import ProjectModal from '../../features/projects/components/ProjectModal.tsx'
 import { 
   Plus, 
-  Eye, 
   Edit, 
   Trash2, 
   Loader2
@@ -22,24 +20,17 @@ const ProjectsPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      dispatch(setLoading(true))
-      try {
-        const data = await projectService.getProjects()
-        dispatch(setProjects(data as any))
-      } finally {
-        dispatch(setLoading(false))
-      }
-    }
-    fetchProjects()
+    dispatch(fetchProjects())
   }, [dispatch])
 
   const handleCreateProject = async (data: any) => {
-    try {
-      const newProject = await projectService.createProject(data)
-      dispatch(addProject(newProject as any))
-    } catch (error) {
-      console.error('Failed to create project', error)
+    await dispatch(createProject(data))
+    setIsModalOpen(false)
+  }
+
+  const handleDeleteProject = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this project? All associated tasks will also be removed.')) {
+      dispatch(deleteProjectAsync(id))
     }
   }
 
@@ -57,7 +48,7 @@ const ProjectsPage: React.FC = () => {
       accessorKey: 'name',
       header: 'Project Name',
       cell: ({ row }) => (
-        <div className="font-semibold text-gray-900">{row.original.name}</div>
+        <div className="font-semibold text-[var(--text-primary)]">{row.original.name}</div>
       ),
     },
     {
@@ -77,7 +68,7 @@ const ProjectsPage: React.FC = () => {
       accessorKey: 'deadline',
       header: 'Deadline',
       cell: ({ row }) => (
-        <div className="text-gray-500 text-xs">{row.original.deadline}</div>
+        <div className="text-[var(--text-secondary)] text-xs">{row.original.dueDate || row.original.deadline}</div>
       ),
     },
     {
@@ -91,7 +82,7 @@ const ProjectsPage: React.FC = () => {
               style={{ width: `${row.original.progression}%` }}
             />
           </div>
-          <span className="text-xs font-bold text-gray-600 w-8">{row.original.progression}%</span>
+          <span className="text-xs font-bold text-[var(--text-secondary)] w-8">{row.original.progression}%</span>
         </div>
       ),
     },
@@ -102,13 +93,18 @@ const ProjectsPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <Link to={`/projects/${row.original.id}`} virtual-href={`/projects/${row.original.id}`}>
             <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-              <Eye className="h-4 w-4" />
+              <Plus className="h-4 w-4" />
             </Button>
           </Link>
           <Button variant="outline" size="sm" className="h-8 w-8 p-0">
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 hover:border-red-200"
+            onClick={() => handleDeleteProject(row.original.id)}
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -120,8 +116,8 @@ const ProjectsPage: React.FC = () => {
     <div className="p-8 space-y-6 animate-in fade-in duration-500">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Projects</h1>
-          <p className="text-sm text-gray-500">Manage and track all your startup initiatives in one place.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Projects</h1>
+          <p className="text-sm text-[var(--text-secondary)]">Manage and track all your startup initiatives in one place.</p>
         </div>
         <Button onClick={() => setIsModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />

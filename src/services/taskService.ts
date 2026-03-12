@@ -1,124 +1,65 @@
-import tasksData from '../data/tasks.json'
+import { mockDB } from './mockDatabaseService';
 import { notificationService } from './notificationService.ts'
 
-const TASKS_DB_KEY = 'startuphub_tasks_db'
-
-const getInitialTasks = () => {
-  const savedDb = localStorage.getItem(TASKS_DB_KEY)
-  if (savedDb) return JSON.parse(savedDb)
-  localStorage.setItem(TASKS_DB_KEY, JSON.stringify(tasksData))
-  return [...tasksData]
-}
-
-let tasks = getInitialTasks()
-
-const saveToDb = () => {
-  localStorage.setItem(TASKS_DB_KEY, JSON.stringify(tasks))
-}
-
 export const taskService = {
-  getTasks: () => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve([...tasks]), 500)
-    })
+  getTasks: async () => {
+    return mockDB.getAll('tasks');
   },
 
-  getTasksByProject: (projectId: string) => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve(tasks.filter((t: any) => t.projectId === projectId)), 500)
-    })
+  getTasksByProject: async (projectId: string) => {
+    const allTasks = await mockDB.getAll('tasks');
+    return allTasks.filter((t: any) => t.projectId === projectId);
   },
 
-  getTaskById: (id: string) => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve(tasks.find((t: any) => t.id === id)), 500)
-    })
+  getTaskById: async (id: string) => {
+    return mockDB.getById('tasks', id);
   },
 
-  createTask: (taskData: any) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const newTask = {
-          id: `t${Date.now()}`,
-          ...taskData,
-          createdAt: new Date().toISOString(),
-        }
-        tasks.push(newTask)
-        saveToDb()
+  createTask: async (taskData: any) => {
+    const newTask = await mockDB.create('tasks', {
+      ...taskData,
+      createdAt: new Date().toISOString(),
+    });
 
-        notificationService.createNotification({
-          type: 'task',
-          message: `Alex created task '${newTask.title}'`,
-          entityId: newTask.id,
-          entityType: 'Task',
-          userId: '1',
-          userName: 'Alex Riviera',
-          userAvatar: 'https://i.pravatar.cc/150?u=alex'
-        })
+    await notificationService.createNotification({
+      type: 'task',
+      message: `Alex created task '${newTask.title}'`,
+      entityId: newTask.id,
+      entityType: 'Task',
+      userId: '1',
+      userName: 'Alex Riviera',
+      userAvatar: 'https://i.pravatar.cc/150?u=alex'
+    });
 
-        resolve(newTask)
-      }, 500)
-    })
+    return newTask;
   },
 
-  updateTask: (id: string, taskData: any) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = tasks.findIndex((t: any) => t.id === id)
-        if (index !== -1) {
-          const oldStatus = tasks[index].status
-          tasks[index] = { ...tasks[index], ...taskData }
-          const newStatus = tasks[index].status
-          
-          saveToDb()
+  updateTask: async (id: string, taskData: any) => {
+    const oldTask = await mockDB.getById('tasks', id);
+    if (!oldTask) throw new Error('Task not found');
 
-          if (oldStatus !== newStatus) {
-            notificationService.createNotification({
-              type: 'task',
-              message: `Sarah moved task '${tasks[index].title}' to ${newStatus}`,
-              entityId: id,
-              entityType: 'Task',
-              userId: '2',
-              userName: 'Sarah Chen',
-              userAvatar: 'https://i.pravatar.cc/150?u=sarah'
-            })
-          }
+    const updatedTask = await mockDB.update('tasks', id, taskData);
+    
+    if (oldTask.status !== updatedTask.status) {
+      await notificationService.createNotification({
+        type: 'task',
+        message: `Sarah moved task '${updatedTask.title}' to ${updatedTask.status}`,
+        entityId: id,
+        entityType: 'Task',
+        userId: '2',
+        userName: 'Sarah Chen',
+        userAvatar: 'https://i.pravatar.cc/150?u=sarah'
+      });
+    }
 
-          resolve(tasks[index])
-        } else {
-          reject(new Error('Task not found'))
-        }
-      }, 500)
-    })
+    return updatedTask;
   },
 
-  deleteTask: (id: string) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = tasks.findIndex((t: any) => t.id === id)
-        if (index !== -1) {
-          tasks.splice(index, 1)
-          saveToDb()
-          resolve(true)
-        } else {
-          reject(new Error('Task not found'))
-        }
-      }, 500)
-    })
+  deleteTask: async (id: string) => {
+    return mockDB.delete('tasks', id);
   },
 
-  reorderTasks: (newTasks: any[]) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        // Find if status changed during reorder (dnd-kit reorder logic)
-        // For simplicity, we just log "Task reordered" if needed, 
-        // but typically cross-column is handled by updateTask (status change).
-        // If reorderTasks is used for cross-column too, we handle it here.
-        
-        tasks = [...newTasks]
-        saveToDb()
-        resolve(tasks)
-      }, 500)
-    })
+  reorderTasks: async (newTasks: any[]) => {
+    return mockDB.bulkUpdate('tasks', newTasks);
   }
 }

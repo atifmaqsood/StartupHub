@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux'
-import { setProjects } from '../../store/projectSlice'
-import { setTasks } from '../../store/taskSlice'
-import { setLeads } from '../../store/crmSlice'
-import { setMembers } from '../../store/teamSlice'
-import { projectService } from '../../services/projectService'
-import { taskService } from '../../services/taskService'
-import { crmService } from '../../services/crmService'
-import { teamService } from '../../services/teamService'
+import { fetchProjects } from '../../store/projectSlice'
+import { fetchTasks } from '../../store/taskSlice'
+import { fetchLeads } from '../../store/crmSlice'
+import { fetchMembers } from '../../store/teamSlice'
+import { selectDashboardStats } from '../../store/selectors'
 import MetricWidget from '../../features/analytics/components/MetricWidget'
 import ProjectAnalytics from '../../features/analytics/components/ProjectAnalytics'
 import TaskAnalytics from '../../features/analytics/components/TaskAnalytics'
@@ -30,37 +27,18 @@ const AnalyticsPage: React.FC = () => {
   const { items: tasks } = useAppSelector(state => state.tasks)
   const { leads } = useAppSelector(state => state.crm)
   const { members } = useAppSelector(state => state.team)
+  const stats = useAppSelector(selectDashboardStats)
 
   const [activeTab, setActiveTab] = useState<'projects' | 'tasks' | 'crm' | 'team'>('projects')
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [projectsData, tasksData, leadsData, teamData]: [any, any, any, any] = await Promise.all([
-          projectService.getProjects(),
-          taskService.getTasks(),
-          crmService.getLeads(),
-          teamService.getMembers()
-        ])
-        
-        dispatch(setProjects(projectsData))
-        dispatch(setTasks(tasksData))
-        dispatch(setLeads(leadsData))
-        dispatch(setMembers(teamData))
-      } catch (error) {
-        console.error('Failed to fetch analytics data', error)
-      }
-    }
-
-    fetchData()
+    dispatch(fetchProjects())
+    dispatch(fetchTasks())
+    dispatch(fetchLeads())
+    dispatch(fetchMembers())
   }, [dispatch])
 
-  const stats = {
-    totalProjects: projects.length,
-    completedTasks: tasks.filter(t => t.status === 'Completed').length,
-    pipelineValue: leads.reduce((sum: number, l: any) => sum + parseInt(String(l.value).replace(/[^0-9]/g, '') || '0'), 0),
-    activeMembers: members.filter(m => m.status === 'Active').length
-  }
+  // stats are now from useAppSelector(selectDashboardStats)
 
   const TabButton = ({ id, label, icon: Icon }: any) => (
     <button
@@ -109,7 +87,7 @@ const AnalyticsPage: React.FC = () => {
         />
         <MetricWidget 
           title="Pipeline Value" 
-          value={`$${(stats.pipelineValue / 1000).toFixed(1)}k`} 
+          value={`$${(stats.totalLeadValue / 1000).toFixed(1)}k`} 
           change={5} 
           trend="up" 
           icon={Target} 

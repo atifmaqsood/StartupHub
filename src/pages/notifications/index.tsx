@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux'
-import { setNotifications, setLoading, markAllAsRead } from '../../store/notificationSlice'
-import { notificationService } from '../../services/notificationService'
+import { fetchNotifications, markAllAsReadAsync, markAsReadAsync, optimisticMarkAllAsRead, optimisticMarkAsRead } from '../../store/notificationSlice'
 import NotificationItem from '../../features/notifications/components/NotificationItem'
 import Button from '../../components/ui/Button'
 import { 
@@ -25,25 +24,12 @@ const ActivityFeedPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      dispatch(setLoading(true))
-      try {
-        const data = await notificationService.getNotifications()
-        dispatch(setNotifications(data as any))
-      } finally {
-        dispatch(setLoading(false))
-      }
-    }
-    fetchNotifications()
+    dispatch(fetchNotifications())
   }, [dispatch])
 
-  const handleMarkAllRead = async () => {
-    try {
-      await notificationService.markAllAsRead()
-      dispatch(markAllAsRead())
-    } catch (error) {
-      console.error('Failed to mark all as read', error)
-    }
+  const handleMarkAllRead = () => {
+    dispatch(optimisticMarkAllAsRead())
+    dispatch(markAllAsReadAsync())
   }
 
   const filteredNotifications = useMemo(() => {
@@ -150,8 +136,8 @@ const ActivityFeedPage: React.FC = () => {
                         notification={notif} 
                         onClick={() => {
                           if (!notif.isRead) {
-                            notificationService.markAsRead(notif.id)
-                            dispatch(setNotifications(items.map(n => n.id === notif.id ? {...n, isRead: true} : n)))
+                            dispatch(optimisticMarkAsRead(notif.id))
+                            dispatch(markAsReadAsync(notif.id))
                           }
                         }}
                       />

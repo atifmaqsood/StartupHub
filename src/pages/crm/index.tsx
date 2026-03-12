@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux.ts'
-import { setLeads, setLoading, addLead } from '../../store/crmSlice.ts'
-import { crmService } from '../../services/crmService.ts'
+import { fetchLeads, createLead } from '../../store/crmSlice.ts'
 import PipelineBoard from '../../features/crm/components/PipelineBoard.tsx'
 import LeadModal from '../../features/crm/components/LeadModal.tsx'
 import Button from '../../components/ui/Button.tsx'
@@ -13,25 +12,12 @@ const CRMPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    const fetchLeads = async () => {
-      dispatch(setLoading(true))
-      try {
-        const data = await crmService.getLeads()
-        dispatch(setLeads(data as any))
-      } finally {
-        dispatch(setLoading(false))
-      }
-    }
-    fetchLeads()
+    dispatch(fetchLeads())
   }, [dispatch])
 
   const handleCreateLead = async (data: any) => {
-    try {
-      const newLead = await crmService.createLead(data)
-      dispatch(addLead(newLead as any))
-    } catch (error) {
-      console.error('Failed to create lead', error)
-    }
+    await dispatch(createLead(data))
+    setIsModalOpen(false)
   }
 
   const totalPipelineValue = leads.reduce((acc, lead) => acc + (Number(lead.value) || 0), 0)

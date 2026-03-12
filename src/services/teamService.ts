@@ -1,102 +1,55 @@
-import teamData from '../data/team.json'
+import { mockDB } from './mockDatabaseService';
 import { notificationService } from './notificationService.ts'
 
-const TEAM_DB_KEY = 'startuphub_team_db'
-
-const getInitialTeam = () => {
-  const savedDb = localStorage.getItem(TEAM_DB_KEY)
-  if (savedDb) return JSON.parse(savedDb)
-  localStorage.setItem(TEAM_DB_KEY, JSON.stringify(teamData))
-  return [...teamData]
-}
-
-let members = getInitialTeam()
-
-const saveToDb = () => {
-  localStorage.setItem(TEAM_DB_KEY, JSON.stringify(members))
-}
-
 export const teamService = {
-  getMembers: () => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve([...members]), 500)
-    })
+  getMembers: async () => {
+    return mockDB.getAll('team');
   },
 
-  getMemberById: (id: string) => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve(members.find((m: any) => m.id === id)), 500)
-    })
+  getMemberById: async (id: string) => {
+    return mockDB.getById('team', id);
   },
 
-  inviteMember: (memberData: any) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const newMember = {
-          id: `mem${Date.now()}`,
-          ...memberData,
-          status: 'Pending',
-          joinedDate: new Date().toISOString().split('T')[0],
-          avatar: `https://i.pravatar.cc/150?u=${memberData.name}`
-        }
-        members.unshift(newMember)
-        saveToDb()
+  inviteMember: async (memberData: any) => {
+    const newMember = await mockDB.create('team', {
+      ...memberData,
+      status: 'Pending',
+      joinedDate: new Date().toISOString().split('T')[0],
+      avatar: `https://i.pravatar.cc/150?u=${encodeURIComponent(memberData.name)}`
+    });
 
-        notificationService.createNotification({
-          type: 'team',
-          message: `Alex invited ${newMember.name} to the team`,
-          entityId: newMember.id,
-          entityType: 'Member',
-          userId: '1',
-          userName: 'Alex Riviera',
-          userAvatar: 'https://i.pravatar.cc/150?u=alex'
-        })
+    await notificationService.createNotification({
+      type: 'team',
+      message: `Alex invited ${newMember.name} to the team`,
+      entityId: newMember.id,
+      entityType: 'Member',
+      userId: '1',
+      userName: 'Alex Riviera',
+      userAvatar: 'https://i.pravatar.cc/150?u=alex'
+    });
 
-        resolve(newMember)
-      }, 500)
-    })
+    return newMember;
   },
 
-  updateMember: (id: string, memberData: any) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = members.findIndex((m: any) => m.id === id)
-        if (index !== -1) {
-          members[index] = { ...members[index], ...memberData }
-          saveToDb()
-          resolve(members[index])
-        } else {
-          reject(new Error('Member not found'))
-        }
-      }, 500)
-    })
+  updateMember: async (id: string, memberData: any) => {
+    return mockDB.update('team', id, memberData);
   },
 
-  deleteMember: (id: string) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = members.findIndex((m: any) => m.id === id)
-        if (index !== -1) {
-          const memberName = members[index].name
-          const memberId = members[index].id
-          members.splice(index, 1)
-          saveToDb()
-
-          notificationService.createNotification({
+  deleteMember: async (id: string) => {
+    const member = await mockDB.getById('team', id);
+    if (member) {
+        await mockDB.delete('team', id);
+        
+        await notificationService.createNotification({
             type: 'team',
-            message: `Alex removed ${memberName} from the organization`,
-            entityId: memberId,
+            message: `Alex removed ${member.name} from the organization`,
+            entityId: id,
             entityType: 'Member',
             userId: '1',
             userName: 'Alex Riviera',
             userAvatar: 'https://i.pravatar.cc/150?u=alex'
-          })
-
-          resolve(true)
-        } else {
-          reject(new Error('Member not found'))
-        }
-      }, 500)
-    })
+        });
+    }
+    return true;
   }
 }

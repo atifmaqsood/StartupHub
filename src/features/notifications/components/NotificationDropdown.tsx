@@ -1,8 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
-import { markAsRead, markAllAsRead } from '../../../store/notificationSlice'
-import { notificationService } from '../../../services/notificationService'
+import { markAsReadAsync, markAllAsReadAsync, optimisticMarkAsRead, optimisticMarkAllAsRead } from '../../../store/notificationSlice'
 import NotificationItem from './NotificationItem'
 import Button from '../../../components/ui/Button'
 import { CheckCheck, Settings, BellOff } from 'lucide-react'
@@ -19,27 +18,16 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ onClose }) 
   const latestNotifications = items.slice(0, 5)
   const unreadCount = items.filter(n => !n.isRead).length
 
-  const handleMarkAllRead = async () => {
-    try {
-      await notificationService.markAllAsRead()
-      dispatch(markAllAsRead())
-    } catch (error) {
-      console.error('Failed to mark all as read', error)
-    }
+  const handleMarkAllRead = () => {
+    dispatch(optimisticMarkAllAsRead())
+    dispatch(markAllAsReadAsync())
   }
 
-  const handleItemClick = async (notif: any) => {
+  const handleItemClick = (notif: any) => {
     if (!notif.isRead) {
-      try {
-        await notificationService.markAsRead(notif.id)
-        dispatch(markAsRead(notif.id))
-      } catch (error) {
-        console.error('Failed to mark as read', error)
-      }
+      dispatch(optimisticMarkAsRead(notif.id))
+      dispatch(markAsReadAsync(notif.id))
     }
-    
-    // Logic for redirection if needed
-    // if (notif.type === 'project') navigate(`/projects/${notif.entityId}`)
     
     onClose()
   }

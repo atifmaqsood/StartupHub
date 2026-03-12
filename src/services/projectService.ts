@@ -1,98 +1,72 @@
-import projectsData from '../data/projects.json'
+import { mockDB } from './mockDatabaseService';
 import { notificationService } from './notificationService.ts'
 
-const PROJECTS_DB_KEY = 'startuphub_projects_db'
-
-const getInitialProjects = () => {
-  const savedDb = localStorage.getItem(PROJECTS_DB_KEY)
-  if (savedDb) return JSON.parse(savedDb)
-  localStorage.setItem(PROJECTS_DB_KEY, JSON.stringify(projectsData))
-  return [...projectsData]
-}
-
-let projects = getInitialProjects()
-
-const saveToDb = () => {
-  localStorage.setItem(PROJECTS_DB_KEY, JSON.stringify(projects))
-}
-
 export const projectService = {
-  getProjects: () => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve([...projects]), 500)
-    })
+  getProjects: async () => {
+    return mockDB.getAll('projects');
   },
 
-  getProjectById: (id: string) => {
-    return new Promise(resolve => {
-      setTimeout(() => resolve(projects.find((p: any) => p.id === id)), 500)
-    })
+  getProjectById: async (id: string) => {
+    return mockDB.getById('projects', id);
   },
 
-  createProject: (projectData: any) => {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const newProject = {
-          id: `p${Date.now()}`,
-          ...projectData,
-          progression: 0,
-        }
-        projects.push(newProject)
-        saveToDb()
+  createProject: async (projectData: any) => {
+    const newProject = await mockDB.create('projects', {
+      ...projectData,
+      progression: 0,
+    });
+    
+    await notificationService.createNotification({
+      type: 'project',
+      message: `Alex created project '${newProject.name}'`,
+      entityId: newProject.id,
+      entityType: 'Project',
+      userId: '1',
+      userName: 'Alex Riviera',
+      userAvatar: 'https://i.pravatar.cc/150?u=alex'
+    });
+
+    return newProject;
+  },
+
+  updateProject: async (id: string, projectData: any) => {
+    const updatedProject = await mockDB.update('projects', id, projectData);
+
+    await notificationService.createNotification({
+      type: 'project',
+      message: `Alex updated project '${updatedProject.name}'`,
+      entityId: id,
+      entityType: 'Project',
+      userId: '1',
+      userName: 'Alex Riviera',
+      userAvatar: 'https://i.pravatar.cc/150?u=alex'
+    });
+
+    return updatedProject;
+  },
+
+  deleteProject: async (id: string) => {
+    const project = await mockDB.getById('projects', id);
+    if (project) {
+        await mockDB.delete('projects', id);
         
-        notificationService.createNotification({
-          type: 'project',
-          message: `Alex created project '${newProject.name}'`,
-          entityId: newProject.id,
-          entityType: 'Project',
-          userId: '1',
-          userName: 'Alex Riviera',
-          userAvatar: 'https://i.pravatar.cc/150?u=alex'
-        })
+        // Cleanup associated tasks
+        const allTasks = await mockDB.getAll('tasks');
+        const remainingTasks = allTasks.filter(t => t.projectId !== id);
+        if (allTasks.length !== remainingTasks.length) {
+            await mockDB.bulkUpdate('tasks', remainingTasks);
+        }
 
-        resolve(newProject)
-      }, 800)
-    })
-  },
-
-  updateProject: (id: string, projectData: any) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = projects.findIndex((p: any) => p.id === id)
-        if (index !== -1) {
-          projects[index] = { ...projects[index], ...projectData }
-          saveToDb()
-
-          notificationService.createNotification({
+        await notificationService.createNotification({
             type: 'project',
-            message: `Alex updated project '${projects[index].name}'`,
+            message: `Alex deleted project '${project.name}'`,
             entityId: id,
             entityType: 'Project',
             userId: '1',
             userName: 'Alex Riviera',
             userAvatar: 'https://i.pravatar.cc/150?u=alex'
-          })
-
-          resolve(projects[index])
-        } else {
-          reject(new Error('Project not found'))
-        }
-      }, 500)
-    })
-  },
-
-  deleteProject: (id: string) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = projects.findIndex((p: any) => p.id === id)
-        if (index !== -1) {
-          projects.splice(index, 1)
-          saveToDb()
-          resolve(true)
-        } else {
-          reject(new Error('Project not found'))
-        }
-      }, 500)
-    })
+        });
+    }
+    return true;
   }
 }

@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Bell } from 'lucide-react'
 import { useAppSelector, useAppDispatch } from '../../../hooks/redux'
-import { setNotifications, setLoading } from '../../../store/notificationSlice'
-import { notificationService } from '../../../services/notificationService'
+import { fetchNotifications } from '../../../store/notificationSlice'
 import NotificationDropdown from './NotificationDropdown'
 import { cn } from '../../../utils'
 
@@ -15,16 +14,7 @@ const NotificationBell: React.FC = () => {
   const unreadCount = items.filter(n => !n.isRead).length
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      dispatch(setLoading(true))
-      try {
-        const data = await notificationService.getNotifications()
-        dispatch(setNotifications(data as any))
-      } finally {
-        dispatch(setLoading(false))
-      }
-    }
-    fetchNotifications()
+    dispatch(fetchNotifications())
   }, [dispatch])
 
   useEffect(() => {

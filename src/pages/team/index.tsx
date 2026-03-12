@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux.ts'
-import { setMembers, setLoading, addMember, removeMember } from '../../store/teamSlice.ts'
-import { teamService } from '../../services/teamService.ts'
+import { fetchMembers, inviteMember, deleteMemberAsync } from '../../store/teamSlice.ts'
 import { DataTable } from '../../components/tables/DataTable.tsx'
 import InviteMemberModal from '../../features/team/components/InviteMemberModal.tsx'
 import MemberRoleBadge from '../../features/team/components/MemberRoleBadge.tsx'
@@ -16,35 +15,17 @@ const TeamPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    const fetchMembers = async () => {
-      dispatch(setLoading(true))
-      try {
-        const data = await teamService.getMembers()
-        dispatch(setMembers(data as any))
-      } finally {
-        dispatch(setLoading(false))
-      }
-    }
-    fetchMembers()
+    dispatch(fetchMembers())
   }, [dispatch])
 
   const handleInvite = async (data: any) => {
-    try {
-      const newMember = await teamService.inviteMember(data)
-      dispatch(addMember(newMember as any))
-    } catch (error) {
-      console.error('Failed to invite member', error)
-    }
+    await dispatch(inviteMember(data))
+    setIsModalOpen(false)
   }
 
-  const handleDelete = async (id: string, name: string) => {
+  const handleDelete = (id: string, name: string) => {
     if (window.confirm(`Are you sure you want to remove ${name} from the team?`)) {
-      try {
-        await teamService.deleteMember(id)
-        dispatch(removeMember(id))
-      } catch (error) {
-        console.error('Failed to delete member', error)
-      }
+      dispatch(deleteMemberAsync(id))
     }
   }
 

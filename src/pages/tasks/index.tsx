@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux.ts'
-import { setTasks, setLoading, addTask } from '../../store/taskSlice.ts'
-import { taskService } from '../../services/taskService.ts'
+import { fetchTasks, createTask } from '../../store/taskSlice.ts'
 import KanbanBoard from '../../features/tasks/components/KanbanBoard.tsx'
 import TaskModal from '../../features/tasks/components/TaskModal.tsx'
 import Button from '../../components/ui/Button.tsx'
@@ -13,25 +12,12 @@ const TasksPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      dispatch(setLoading(true))
-      try {
-        const data = await taskService.getTasks()
-        dispatch(setTasks(data as any))
-      } finally {
-        dispatch(setLoading(false))
-      }
-    }
-    fetchTasks()
+    dispatch(fetchTasks())
   }, [dispatch])
 
   const handleCreateTask = async (data: any) => {
-    try {
-      const newTask = await taskService.createTask(data)
-      dispatch(addTask(newTask as any))
-    } catch (error) {
-      console.error('Failed to create task', error)
-    }
+    await dispatch(createTask(data))
+    setIsModalOpen(false)
   }
 
   return (

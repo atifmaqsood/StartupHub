@@ -13,8 +13,8 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import KanbanColumn from './KanbanColumn.tsx'
 import TaskCard from './TaskCard.tsx'
 import { useDispatch } from 'react-redux'
-import { reorderTasks } from '../../../store/taskSlice.ts'
-import { taskService } from '../../../services/taskService.ts'
+import { optimisticReorderTasks, reorderTasksAsync } from '../../../store/taskSlice.ts'
+import type { AppDispatch } from '../../../store/index.ts'
 
 interface KanbanBoardProps {
   tasks: any[]
@@ -28,7 +28,7 @@ const COLUMNS = [
 ]
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [activeTask, setActiveTask] = useState<any>(null)
 
   const sensors = useSensors(
@@ -75,7 +75,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
     newTasks[activeIndex] = updatedTask
     
     // We update Redux immediately for smooth transition
-    dispatch(reorderTasks(newTasks))
+    dispatch(optimisticReorderTasks(newTasks))
   }
 
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -112,13 +112,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks }) => {
         newTasks.push(updatedTask)
       }
 
-      dispatch(reorderTasks(newTasks))
-      
-      try {
-        await taskService.reorderTasks(newTasks)
-      } catch (error) {
-        console.error('Failed to persist task reorder', error)
-      }
+      dispatch(optimisticReorderTasks(newTasks))
+      dispatch(reorderTasksAsync(newTasks))
     }
   }
 
