@@ -18,6 +18,7 @@ import LeadDetailsPage from '../pages/crm/details.tsx'
 import TeamPage from '../pages/team/index.tsx'
 import MemberProfilePage from '../pages/team/details.tsx'
 import ActivityFeedPage from '../pages/notifications/index.tsx'
+import AnalyticsPage from '../pages/analytics/index.tsx'
 import ErrorPage from '../pages/ErrorPage.tsx'
 
 // Placeholder components
@@ -107,13 +108,14 @@ export const router = createBrowserRouter([
   {
     path: '/analytics',
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
         children: [
-          { index: true, element: <Placeholder name="General Analytics" /> },
-          { path: 'projects', element: <Placeholder name="Project Analytics" /> },
-          { path: 'tasks', element: <Placeholder name="Task Analytics" /> },
+          { index: true, element: <AnalyticsPage /> },
+          { path: 'projects', element: <AnalyticsPage /> },
+          { path: 'tasks', element: <AnalyticsPage /> },
         ]
       }
     ],
