@@ -1,0 +1,26 @@
+[
+  {
+    "id": "t1",
+    "projectId": "p1",
+    "title": "Setup Kubernetes Cluster",
+    "assignee": "1",
+    "status": "In Progress",
+    "dueDate": "2026-03-25"
+  },
+  {
+    "id": "t2",
+    "projectId": "p1",
+    "title": "Implement Auth Logic",
+    "assignee": "2",
+    "status": "Todo",
+    "dueDate": "2026-03-30"
+  },
+  {
+    "id": "t3",
+    "projectId": "p2",
+    "title": "Design UI Mockups",
+    "assignee": "2",
+    "status": "Completed",
+    "dueDate": "2026-03-10"
+  }
+]

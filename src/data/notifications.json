@@ -1,0 +1,16 @@
+[
+  {
+    "id": "n1",
+    "type": "project",
+    "message": "New project 'Mobile App V2' assigned to you",
+    "timestamp": "2026-03-12T14:30:00Z",
+    "read": false
+  },
+  {
+    "id": "n2",
+    "type": "task",
+    "message": "Task 'Implement Auth Logic' is overdue",
+    "timestamp": "2026-03-12T10:00:00Z",
+    "read": true
+  }
+]
