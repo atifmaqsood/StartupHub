@@ -15,6 +15,8 @@ import TasksPage from '../pages/tasks/index.tsx'
 import TaskDetailsPage from '../pages/tasks/details.tsx'
 import CRMPage from '../pages/crm/index.tsx'
 import LeadDetailsPage from '../pages/crm/details.tsx'
+import TeamPage from '../pages/team/index.tsx'
+import MemberProfilePage from '../pages/team/details.tsx'
 import ErrorPage from '../pages/ErrorPage.tsx'
 
 // Placeholder components
@@ -90,12 +92,13 @@ export const router = createBrowserRouter([
   {
     path: '/team',
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
         children: [
-          { index: true, element: <Placeholder name="Team Overview" /> },
-          { path: 'invite', element: <Placeholder name="Invite Member" /> },
+          { index: true, element: <TeamPage /> },
+          { path: ':id', element: <MemberProfilePage /> },
         ]
       }
     ],

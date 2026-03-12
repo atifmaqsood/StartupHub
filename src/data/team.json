@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1",
+    "name": "Alex Riviera",
+    "email": "alex@startuphub.io",
+    "role": "Owner",
+    "status": "Active",
+    "joinedDate": "2024-01-15",
+    "avatar": "https://i.pravatar.cc/150?u=alex"
+  },
+  {
+    "id": "2",
+    "name": "Sarah Chen",
+    "email": "sarah@startuphub.io",
+    "role": "Admin",
+    "status": "Active",
+    "joinedDate": "2024-02-10",
+    "avatar": "https://i.pravatar.cc/150?u=sarah"
+  },
+  {
+    "id": "3",
+    "name": "Jordan Smith",
+    "email": "jordan@startuphub.io",
+    "role": "Member",
+    "status": "Pending",
+    "joinedDate": "2024-03-01",
+    "avatar": "https://i.pravatar.cc/150?u=jordan"
+  }
+]
