@@ -1,0 +1,18 @@
+[
+  {
+    "id": "l1",
+    "name": "Jordan Smith",
+    "company": "TechCorp",
+    "email": "jordan@techcorp.com",
+    "status": "Quote Sent",
+    "value": 5000
+  },
+  {
+    "id": "l2",
+    "name": "Emma Wilson",
+    "company": "Innovate Ltd",
+    "email": "emma@innovate.com",
+    "status": "Initial Contact",
+    "value": 12000
+  }
+]

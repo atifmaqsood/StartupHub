@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "name": "Alex Riviera",
+    "email": "alex@startuphub.io",
+    "role": "Owner",
+    "avatar": "https://i.pravatar.cc/150?u=alex"
+  },
+  {
+    "id": "2",
+    "name": "Sarah Chen",
+    "email": "sarah@startuphub.io",
+    "role": "Admin",
+    "avatar": "https://i.pravatar.cc/150?u=sarah"
+  }
+]

@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  /* Wire up Tailwind theme to our dynamic Redux variables */
+  --color-primary: var(--color-primary, #3b82f6);
+  --color-primary-foreground: white;
+  
+  --color-secondary: var(--color-secondary, #64748b);
+  --color-accent: var(--color-accent, #8b5cf6);
+  
+  --color-background: var(--bg-main, #f8fafc);
+  --color-foreground: var(--text-primary, #0f172a);
+  
+  --color-card: var(--bg-card, #ffffff);
+  --color-muted: var(--text-muted, #94a3b8);
+  --color-muted-foreground: var(--text-secondary, #475569);
+  
+  --color-border: oklch(0.922 0.004 285.22);
+  --color-input: oklch(0.922 0.004 285.22);
+  --color-ring: var(--color-primary);
+  
+  /* Radii */
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Handle Dark Mode Overrides for variables if needed, 
+     but we primarily control them via the JS hook. 
+     This ensures Tailwind's "dark:" utility works. */
+  .dark {
+    --color-border: oklch(0.25 0.01 250);
+  }
+}
+
+/* Custom Scrollbar for better UI */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "p1",
+    "name": "CloudScale Infrastructure",
+    "status": "In Progress",
+    "priority": "High",
+    "dueDate": "2026-04-15",
+    "progression": 65,
+    "members": ["1", "2"]
+  },
+  {
+    "id": "p2",
+    "name": "Mobile App V2",
+    "status": "Planning",
+    "priority": "Medium",
+    "dueDate": "2026-05-20",
+    "progression": 20,
+    "members": ["2"]
+  }
+]
