@@ -23,15 +23,19 @@ const ForgotPasswordForm: React.FC = () => {
 
   if (isSubmitted) {
     return (
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-6 animate-in zoom-in-95 duration-500">
         <div className="flex justify-center">
-          <CheckCircle className="h-12 w-12 text-green-500" />
+          <div className="h-20 w-20 bg-green-500/10 rounded-full flex items-center justify-center border-4 border-green-500/20 shadow-lg shadow-green-500/20">
+            <CheckCircle className="h-10 w-10 text-green-500" />
+          </div>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900">Check your email</h3>
-        <p className="text-sm text-gray-600">
-          We've sent a password reset link to your email address.
-        </p>
-        <Link to="/auth/login" virtual-href="/auth/login" className="inline-flex items-center text-sm font-medium text-primary hover:text-primary-dark">
+        <div className="space-y-2">
+          <h3 className="text-xl font-black text-[var(--text-primary)] tracking-tight">Check your email</h3>
+          <p className="text-sm font-bold text-[var(--text-secondary)]">
+            We've sent a password reset link to your email address.
+          </p>
+        </div>
+        <Link to="/auth/login" virtual-href="/auth/login" className="inline-flex items-center justify-center w-full rounded-2xl h-12 text-[11px] font-black uppercase tracking-[0.2em] bg-[var(--bg-main)] text-[var(--text-primary)] hover:bg-[var(--bg-card)] border border-[var(--color-border)]/20 transition-all mt-6 shadow-sm">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to login
         </Link>
@@ -41,21 +45,19 @@ const ForgotPasswordForm: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-600 text-center">
-        Enter your email address and we'll send you a link to reset your password.
-      </p>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <Input
           label="Email Address"
           type="email"
           placeholder="name@company.com"
+          className="rounded-2xl border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 focus-visible:bg-[var(--bg-card)] text-sm font-bold"
           {...register('email', { required: 'Email is required' })}
           error={errors.email?.message as string}
         />
 
         <Button
           type="submit"
-          className="w-full"
+          className="w-full rounded-2xl h-12 text-[11px] font-black uppercase tracking-[0.2em] shadow-lg shadow-[var(--color-primary)]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all mt-4"
           disabled={isSubmitting}
         >
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -64,7 +66,7 @@ const ForgotPasswordForm: React.FC = () => {
       </form>
 
       <div className="text-center">
-        <Link to="/auth/login" virtual-href="/auth/login" className="inline-flex items-center text-sm font-medium text-primary hover:text-primary-dark">
+        <Link to="/auth/login" virtual-href="/auth/login" className="inline-flex items-center text-sm font-black text-[var(--color-primary)] hover:opacity-80 transition-opacity">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to login
         </Link>

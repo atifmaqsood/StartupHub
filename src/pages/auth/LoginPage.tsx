@@ -7,14 +7,14 @@ const LoginPage: React.FC = () => {
   const message = location.state?.message
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">Sign in to your account</h1>
-        <p className="text-sm text-gray-500 mt-1">Enter your credentials to access your dashboard</p>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-black tracking-tight text-[var(--text-primary)]">Welcome back</h2>
+        <p className="text-sm font-bold text-[var(--text-muted)]">Enter your credentials to access your workspace</p>
       </div>
       
       {message && (
-        <div className="p-3 text-sm text-green-600 bg-green-50 border border-green-100 rounded-lg text-center">
+        <div className="p-4 text-xs font-black text-green-600 bg-green-500/10 border border-green-500/20 rounded-2xl text-center uppercase tracking-widest shadow-sm">
           {message}
         </div>
       )}

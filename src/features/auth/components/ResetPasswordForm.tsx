@@ -25,14 +25,12 @@ const ResetPasswordForm: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-600 text-center">
-        Create a new password for your account.
-      </p>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <Input
           label="New Password"
           type="password"
           placeholder="••••••••"
+          className="rounded-2xl border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 focus-visible:bg-[var(--bg-card)] text-sm font-bold tracking-widest"
           {...register('password', { 
             required: 'Password is required',
             minLength: { value: 8, message: 'Password must be at least 8 characters' }
@@ -44,6 +42,7 @@ const ResetPasswordForm: React.FC = () => {
           label="Confirm New Password"
           type="password"
           placeholder="••••••••"
+          className="rounded-2xl border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 focus-visible:bg-[var(--bg-card)] text-sm font-bold tracking-widest"
           {...register('confirmPassword', { 
             required: 'Please confirm your password',
             validate: value => value === password || 'Passwords do not match'
@@ -53,11 +52,11 @@ const ResetPasswordForm: React.FC = () => {
 
         <Button
           type="submit"
-          className="w-full"
+          className="w-full rounded-2xl h-12 text-[11px] font-black uppercase tracking-[0.2em] shadow-lg shadow-[var(--color-primary)]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all mt-4"
           disabled={isSubmitting}
         >
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Reset password
+          Reset Password
         </Button>
       </form>
     </div>
