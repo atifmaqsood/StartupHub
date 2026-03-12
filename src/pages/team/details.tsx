@@ -19,12 +19,14 @@ import {
   ExternalLink
 } from 'lucide-react'
 import { useAppDispatch } from '../../hooks/redux.ts'
-import { deleteMemberAsync, optimisticRemoveMember } from '../../store/teamSlice.ts'
+import { deleteMemberAsync, optimisticRemoveMember, updateMemberAsync, optimisticUpdateMember } from '../../store/teamSlice.ts'
+import { useSystemNotification } from '../../hooks/useSystemNotification'
 
 const MemberProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { notify } = useSystemNotification()
   const [member, setMember] = useState<any>(null)
   const [assignedProjects, setAssignedProjects] = useState<any[]>([])
   const [assignedTasks, setAssignedTasks] = useState<any[]>([])
@@ -59,6 +61,15 @@ const MemberProfilePage: React.FC = () => {
     dispatch(optimisticRemoveMember(id))
     dispatch(deleteMemberAsync(id))
     navigate('/team')
+  }
+
+  const handleStatusChange = async (newStatus: any) => {
+    if (!id || !member) return
+    const updates = { status: newStatus }
+    setMember({ ...member, ...updates })
+    dispatch(optimisticUpdateMember({ id, updates }))
+    dispatch(updateMemberAsync({ id, data: updates }))
+    notify(`Member "${member.name}" status updated to ${newStatus}`, 'team', id)
   }
 
   if (loading) {
@@ -113,6 +124,14 @@ const MemberProfilePage: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <select 
+            className="h-11 rounded-xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4 text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 shadow-sm transition-all"
+            value={member.status}
+            onChange={(e) => handleStatusChange(e.target.value)}
+          >
+            <option value="Active">Active</option>
+            <option value="Pending">Pending</option>
+          </select>
           <Button variant="outline" className="text-red-500 hover:text-red-400 border-red-500/10 hover:border-red-500/20 bg-red-500/5 h-[46px] rounded-xl px-6" onClick={handleDelete}>
             <Trash2 className="mr-2 h-4 w-4" />
             Remove Member

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux.ts'
-import { fetchProjects, createProject, deleteProjectAsync } from '../../store/projectSlice.ts'
+import { fetchProjects, createProject, updateProjectAsync, deleteProjectAsync, optimisticUpdateProject } from '../../store/projectSlice.ts'
 import { DataTable } from '../../components/tables/DataTable.tsx'
 import Button from '../../components/ui/Button.tsx'
 import Badge from '../../components/ui/Badge.tsx'
@@ -18,13 +18,29 @@ const ProjectsPage: React.FC = () => {
   const dispatch = useAppDispatch()
   const { items: projects, loading } = useAppSelector((state) => state.projects)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingProject, setEditingProject] = useState<any>(null)
 
   useEffect(() => {
     dispatch(fetchProjects())
   }, [dispatch])
 
-  const handleCreateProject = async (data: any) => {
-    await dispatch(createProject(data))
+  const handleOpenCreate = () => {
+    setEditingProject(null)
+    setIsModalOpen(true)
+  }
+
+  const handleOpenEdit = (project: any) => {
+    setEditingProject(project)
+    setIsModalOpen(true)
+  }
+
+  const handleProjectSubmit = async (data: any) => {
+    if (editingProject) {
+      dispatch(optimisticUpdateProject({ id: editingProject.id, updates: data }))
+      await dispatch(updateProjectAsync({ id: editingProject.id, data }))
+    } else {
+      await dispatch(createProject(data))
+    }
     setIsModalOpen(false)
   }
 
@@ -96,7 +112,12 @@ const ProjectsPage: React.FC = () => {
               <Plus className="h-4 w-4" />
             </Button>
           </Link>
-          <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="h-8 w-8 p-0"
+            onClick={() => handleOpenEdit(row.original)}
+          >
             <Edit className="h-4 w-4" />
           </Button>
           <Button 
@@ -119,7 +140,7 @@ const ProjectsPage: React.FC = () => {
           <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Projects</h1>
           <p className="text-sm text-[var(--text-secondary)]">Manage and track all your startup initiatives in one place.</p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
+        <Button onClick={handleOpenCreate}>
           <Plus className="mr-2 h-4 w-4" />
           New Project
         </Button>
@@ -136,7 +157,8 @@ const ProjectsPage: React.FC = () => {
       <ProjectModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        onSubmit={handleCreateProject}
+        onSubmit={handleProjectSubmit}
+        project={editingProject}
       />
     </div>
   )

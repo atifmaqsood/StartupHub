@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import Modal from '../../../components/modals/Modal.tsx'
 import Input from '../../../components/ui/Input.tsx'
@@ -9,18 +9,31 @@ interface ProjectModalProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: (data: any) => Promise<void>
+  project?: any
 }
 
-const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSubmit }) => {
+const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSubmit, project }) => {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
-    defaultValues: {
+    defaultValues: project || {
       name: '',
       description: '',
       deadline: '',
-      owner: 'Current User', // Simulated
+      owner: 'Current User',
       status: 'Todo'
     }
   })
+
+  useEffect(() => {
+    if (isOpen) {
+      reset(project || {
+        name: '',
+        description: '',
+        deadline: '',
+        owner: 'Current User',
+        status: 'Todo'
+      })
+    }
+  }, [isOpen, project, reset])
 
   const onFormSubmit = async (data: any) => {
     await onSubmit(data)
@@ -29,7 +42,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSubmit }
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create New Project">
+    <Modal isOpen={isOpen} onClose={onClose} title={project ? 'Edit Project' : 'Create New Project'}>
       <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
         <Input
           label="Project Name"
@@ -74,7 +87,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSubmit }
           </Button>
           <Button type="submit" disabled={isSubmitting} className="rounded-2xl px-8 text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-[var(--color-primary)]/20">
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Genesis Project
+            {project ? 'Synchronize Project' : 'Genesis Project'}
           </Button>
         </div>
       </form>

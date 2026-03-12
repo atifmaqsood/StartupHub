@@ -19,12 +19,14 @@ import {
   Calendar
 } from 'lucide-react'
 import { useAppDispatch } from '../../hooks/redux.ts'
-import { deleteLeadAsync, optimisticDeleteLead } from '../../store/crmSlice.ts'
+import { deleteLeadAsync, optimisticDeleteLead, updateLeadAsync, optimisticUpdateLead } from '../../store/crmSlice.ts'
+import { useSystemNotification } from '../../hooks/useSystemNotification'
 
 const LeadDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { notify } = useSystemNotification()
   const [lead, setLead] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -49,6 +51,15 @@ const LeadDetailsPage: React.FC = () => {
     dispatch(optimisticDeleteLead(id))
     dispatch(deleteLeadAsync(id))
     navigate('/crm')
+  }
+
+  const handleStatusChange = async (newStatus: any) => {
+    if (!id || !lead) return
+    const updates = { status: newStatus }
+    setLead({ ...lead, ...updates })
+    dispatch(optimisticUpdateLead({ id, updates }))
+    dispatch(updateLeadAsync({ id, data: updates }))
+    notify(`Lead "${lead.name}" status updated to ${newStatus}`, 'crm', id)
   }
 
   if (loading) {
@@ -95,6 +106,17 @@ const LeadDetailsPage: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <select 
+            className="h-11 rounded-xl border border-[var(--color-border)]/10 bg-[var(--bg-main)]/50 px-4 text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20"
+            value={lead.status}
+            onChange={(e) => handleStatusChange(e.target.value)}
+          >
+            <option value="New Lead">New Lead</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Negotiation">Negotiation</option>
+            <option value="Won">Won</option>
+            <option value="Lost">Lost</option>
+          </select>
           <Button variant="outline" className="ring-1 ring-[var(--color-border)]/10">
             <Edit className="mr-2 h-4 w-4" />
             Edit

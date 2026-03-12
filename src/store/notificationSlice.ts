@@ -46,10 +46,17 @@ export const deleteNotificationAsync = createAsyncThunk('notifications/delete', 
   return id;
 });
 
+export const addNotificationAsync = createAsyncThunk('notifications/add', async (data: Partial<Notification>) => {
+  return await notificationService.createNotification(data);
+});
+
 const notificationSlice = createSlice({
   name: 'notifications',
   initialState,
   reducers: {
+    addNotification: (state, action: PayloadAction<Notification>) => {
+      state.items.unshift(action.payload)
+    },
     optimisticMarkAsRead: (state, action: PayloadAction<string>) => {
       const notif = state.items.find(n => n.id === action.payload)
       if (notif) {
@@ -83,11 +90,17 @@ const notificationSlice = createSlice({
       })
       .addCase(deleteNotificationAsync.fulfilled, (state, action) => {
         state.items = state.items.filter(n => n.id !== action.payload)
+      })
+      .addCase(addNotificationAsync.fulfilled, (state, action) => {
+        if (!state.items.find(n => n.id === action.payload.id)) {
+          state.items.unshift(action.payload as Notification)
+        }
       });
   },
 })
 
 export const { 
+  addNotification,
   optimisticMarkAsRead, 
   optimisticMarkAllAsRead, 
   optimisticDeleteNotification 

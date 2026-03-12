@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useRef } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -14,6 +14,7 @@ import PipelineColumn from './PipelineColumn.tsx'
 import LeadCard from './LeadCard.tsx'
 import { useAppDispatch } from '../../../hooks/redux.ts'
 import { reorderLeadsAsync, optimisticReorderLeads } from '../../../store/crmSlice.ts'
+import { useSystemNotification } from '../../../hooks/useSystemNotification'
 
 interface PipelineBoardProps {
   leads: any[]
@@ -29,17 +30,23 @@ const STAGES = [
 
 const PipelineBoard: React.FC<PipelineBoardProps> = ({ leads }) => {
   const dispatch = useAppDispatch()
+  const { notify } = useSystemNotification()
   const [activeLead, setActiveLead] = useState<any>(null)
+  const originalStatusRef = useRef<string | null>(null)
+
+  const pointerSensorOptions = useMemo(() => ({
+    activationConstraint: {
+      distance: 8,
+    },
+  }), [])
+
+  const keyboardSensorOptions = useMemo(() => ({
+    coordinateGetter: sortableKeyboardCoordinates,
+  }), [])
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(PointerSensor, pointerSensorOptions),
+    useSensor(KeyboardSensor, keyboardSensorOptions)
   )
 
   const findContainer = (id: string) => {
@@ -52,6 +59,7 @@ const PipelineBoard: React.FC<PipelineBoardProps> = ({ leads }) => {
     const { active } = event
     const lead = leads.find((l) => l.id === active.id)
     setActiveLead(lead)
+    originalStatusRef.current = lead ? lead.status : null
   }
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -80,9 +88,22 @@ const PipelineBoard: React.FC<PipelineBoardProps> = ({ leads }) => {
     const { active, over } = event
     setActiveLead(null)
 
-    if (!over) return
-
     const activeId = active.id as string
+    const originalStatus = originalStatusRef.current
+
+    if (!over) {
+      if (originalStatus) {
+        const leadItem = leads.find(l => l.id === activeId)
+        if (leadItem && leadItem.status !== originalStatus) {
+          const revertedLeads = leads.map(l => 
+            l.id === activeId ? { ...l, status: originalStatus } : l
+          )
+          dispatch(optimisticReorderLeads(revertedLeads))
+        }
+      }
+      return
+    }
+
     const overId = over.id as string
 
     const activeContainer = findContainer(activeId)
@@ -106,9 +127,18 @@ const PipelineBoard: React.FC<PipelineBoardProps> = ({ leads }) => {
         newLeads.splice(activeIndex, 1)
         newLeads.push(updatedLead)
       }
+    } else {
+      if (newLeads[activeIndex].status !== overContainer) {
+        newLeads[activeIndex] = { ...newLeads[activeIndex], status: overContainer }
+      }
+    }
 
-      dispatch(optimisticReorderLeads(newLeads))
-      dispatch(reorderLeadsAsync(newLeads))
+    dispatch(optimisticReorderLeads(newLeads))
+    dispatch(reorderLeadsAsync(newLeads))
+
+    const lead = newLeads.find(l => l.id === activeId)
+    if (lead && originalStatus && originalStatus !== overContainer) {
+      notify(`Lead "${lead.name}" moved to ${overContainer}`, 'crm', activeId)
     }
   }
 

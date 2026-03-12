@@ -17,11 +17,13 @@ import {
 } from 'lucide-react'
 import { useAppDispatch } from '../../hooks/redux.ts'
 import { deleteTaskAsync, updateTaskAsync, optimisticDeleteTask, optimisticUpdateTask } from '../../store/taskSlice.ts'
+import { useSystemNotification } from '../../hooks/useSystemNotification'
 
 const TaskDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { notify } = useSystemNotification()
   const [task, setTask] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
@@ -54,6 +56,7 @@ const TaskDetailsPage: React.FC = () => {
     setTask({ ...task, ...updates })
     dispatch(optimisticUpdateTask({ id, updates }))
     dispatch(updateTaskAsync({ id, data: updates }))
+    notify(`Task status updated to ${newStatus}`, 'task', id)
   }
 
   if (loading) {

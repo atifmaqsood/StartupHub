@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useAppDispatch } from '../../hooks/redux.ts'
+import { updateProjectAsync, optimisticUpdateProject } from '../../store/projectSlice.ts'
+import { useSystemNotification } from '../../hooks/useSystemNotification'
 import { projectService } from '../../services/projectService.ts'
 import { taskService } from '../../services/taskService.ts'
 import Button from '../../components/ui/Button.tsx'
 import Badge from '../../components/ui/Badge.tsx'
+import ProjectModal from '../../features/projects/components/ProjectModal.tsx'
 import { 
   ArrowLeft, 
   Calendar, 
@@ -16,9 +20,12 @@ import {
 
 const ProjectDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
+  const dispatch = useAppDispatch()
+  const { notify } = useSystemNotification()
   const [project, setProject] = useState<any>(null)
   const [tasks, setTasks] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -39,6 +46,23 @@ const ProjectDetailsPage: React.FC = () => {
     }
     fetchProjectData()
   }, [id])
+
+  const handleProjectSubmit = async (data: any) => {
+    if (!id) return
+    dispatch(optimisticUpdateProject({ id, updates: data }))
+    const updated = await dispatch(updateProjectAsync({ id, data })).unwrap()
+    setProject(updated)
+    setIsEditModalOpen(false)
+  }
+
+  const handleStatusChange = async () => {
+    if (!id || !project) return
+    const nextStatus = project.status === 'Completed' ? 'In Progress' : 'Completed'
+    dispatch(optimisticUpdateProject({ id, updates: { status: nextStatus } }))
+    const updated = await dispatch(updateProjectAsync({ id, data: { status: nextStatus } })).unwrap()
+    setProject(updated)
+    notify(`Project "${project.name}" marked as ${nextStatus}`, 'project', id)
+  }
 
   if (loading) {
     return (
@@ -81,8 +105,10 @@ const ProjectDetailsPage: React.FC = () => {
           <p className="text-[var(--text-secondary)] font-medium max-w-2xl">{project.description}</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="ring-1 ring-[var(--color-border)]/10">Edit Project</Button>
-          <Button className="shadow-lg shadow-[var(--color-primary)]/20">Update Status</Button>
+          <Button variant="outline" className="ring-1 ring-[var(--color-border)]/10" onClick={() => setIsEditModalOpen(true)}>Edit Project</Button>
+          <Button className="shadow-lg shadow-[var(--color-primary)]/20" onClick={handleStatusChange}>
+            {project.status === 'Completed' ? 'Reopen Project' : 'Mark as Completed'}
+          </Button>
         </div>
       </div>
 
@@ -182,6 +208,13 @@ const ProjectDetailsPage: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      <ProjectModal 
+        isOpen={isEditModalOpen} 
+        onClose={() => setIsEditModalOpen(false)} 
+        onSubmit={handleProjectSubmit}
+        project={project}
+      />
     </div>
   )
 }
