@@ -4,12 +4,14 @@ import { cn } from '../../utils'
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
   size?: 'sm' | 'md' | 'lg'
+  fullWidth?: boolean
 }
 
 const Button: React.FC<ButtonProps> = ({ 
   className, 
   variant = 'primary', 
   size = 'md', 
+  fullWidth = false,
   ...props 
 }) => {
   const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
@@ -30,7 +32,13 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button 
-      className={cn(baseStyles, variants[variant], sizes[size], className)} 
+      className={cn(
+        baseStyles, 
+        variants[variant], 
+        sizes[size], 
+        fullWidth && 'w-full',
+        className
+      )} 
       {...props} 
     />
   )

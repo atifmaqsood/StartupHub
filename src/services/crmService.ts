@@ -1,4 +1,5 @@
 import leadsData from '../data/leads.json'
+import { notificationService } from './notificationService.ts'
 
 const LEADS_DB_KEY = 'startuphub_leads_db'
 
@@ -38,6 +39,17 @@ export const crmService = {
         }
         leads.unshift(newLead)
         saveToDb()
+
+        notificationService.createNotification({
+          type: 'crm',
+          message: `Alex added new lead '${newLead.name}' from ${newLead.source}`,
+          entityId: newLead.id,
+          entityType: 'Lead',
+          userId: '1',
+          userName: 'Alex Riviera',
+          userAvatar: 'https://i.pravatar.cc/150?u=alex'
+        })
+
         resolve(newLead)
       }, 500)
     })
@@ -48,8 +60,24 @@ export const crmService = {
       setTimeout(() => {
         const index = leads.findIndex((l: any) => l.id === id)
         if (index !== -1) {
+          const oldStatus = leads[index].status
           leads[index] = { ...leads[index], ...leadData }
+          const newStatus = leads[index].status
+          
           saveToDb()
+
+          if (oldStatus !== newStatus) {
+            notificationService.createNotification({
+              type: 'crm',
+              message: `Alex moved lead '${leads[index].name}' to ${newStatus}`,
+              entityId: id,
+              entityType: 'Lead',
+              userId: '1',
+              userName: 'Alex Riviera',
+              userAvatar: 'https://i.pravatar.cc/150?u=alex'
+            })
+          }
+
           resolve(leads[index])
         } else {
           reject(new Error('Lead not found'))

@@ -1,4 +1,5 @@
 import teamData from '../data/team.json'
+import { notificationService } from './notificationService.ts'
 
 const TEAM_DB_KEY = 'startuphub_team_db'
 
@@ -40,6 +41,17 @@ export const teamService = {
         }
         members.unshift(newMember)
         saveToDb()
+
+        notificationService.createNotification({
+          type: 'team',
+          message: `Alex invited ${newMember.name} to the team`,
+          entityId: newMember.id,
+          entityType: 'Member',
+          userId: '1',
+          userName: 'Alex Riviera',
+          userAvatar: 'https://i.pravatar.cc/150?u=alex'
+        })
+
         resolve(newMember)
       }, 500)
     })
@@ -65,8 +77,21 @@ export const teamService = {
       setTimeout(() => {
         const index = members.findIndex((m: any) => m.id === id)
         if (index !== -1) {
+          const memberName = members[index].name
+          const memberId = members[index].id
           members.splice(index, 1)
           saveToDb()
+
+          notificationService.createNotification({
+            type: 'team',
+            message: `Alex removed ${memberName} from the organization`,
+            entityId: memberId,
+            entityType: 'Member',
+            userId: '1',
+            userName: 'Alex Riviera',
+            userAvatar: 'https://i.pravatar.cc/150?u=alex'
+          })
+
           resolve(true)
         } else {
           reject(new Error('Member not found'))

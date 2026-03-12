@@ -1,5 +1,5 @@
-import React from 'react'
-import { Search, Bell, Menu } from 'lucide-react'
+import { Search, Menu } from 'lucide-react'
+import NotificationBell from '../../features/notifications/components/NotificationBell.tsx'
 
 const Navbar: React.FC = () => {
   return (
@@ -20,12 +20,9 @@ const Navbar: React.FC = () => {
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <button className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
-        </button>
-        <div className="h-8 w-px bg-gray-200" />
-        <button className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors">
+        <NotificationBell />
+        <div className="h-8 w-px bg-gray-100" />
+        <button className="hidden sm:block px-4 py-2 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all shadow-sm hover:shadow-md active:scale-95">
           + New Project
         </button>
       </div>

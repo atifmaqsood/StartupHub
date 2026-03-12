@@ -17,6 +17,7 @@ import CRMPage from '../pages/crm/index.tsx'
 import LeadDetailsPage from '../pages/crm/details.tsx'
 import TeamPage from '../pages/team/index.tsx'
 import MemberProfilePage from '../pages/team/details.tsx'
+import ActivityFeedPage from '../pages/notifications/index.tsx'
 import ErrorPage from '../pages/ErrorPage.tsx'
 
 // Placeholder components
@@ -120,11 +121,12 @@ export const router = createBrowserRouter([
   {
     path: '/notifications',
     element: <ProtectedRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         element: <DashboardLayout />,
         children: [
-          { index: true, element: <Placeholder name="Notifications" /> }
+          { index: true, element: <ActivityFeedPage /> }
         ]
       }
     ],

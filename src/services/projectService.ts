@@ -1,4 +1,5 @@
 import projectsData from '../data/projects.json'
+import { notificationService } from './notificationService.ts'
 
 const PROJECTS_DB_KEY = 'startuphub_projects_db'
 
@@ -38,6 +39,17 @@ export const projectService = {
         }
         projects.push(newProject)
         saveToDb()
+        
+        notificationService.createNotification({
+          type: 'project',
+          message: `Alex created project '${newProject.name}'`,
+          entityId: newProject.id,
+          entityType: 'Project',
+          userId: '1',
+          userName: 'Alex Riviera',
+          userAvatar: 'https://i.pravatar.cc/150?u=alex'
+        })
+
         resolve(newProject)
       }, 800)
     })
@@ -50,6 +62,17 @@ export const projectService = {
         if (index !== -1) {
           projects[index] = { ...projects[index], ...projectData }
           saveToDb()
+
+          notificationService.createNotification({
+            type: 'project',
+            message: `Alex updated project '${projects[index].name}'`,
+            entityId: id,
+            entityType: 'Project',
+            userId: '1',
+            userName: 'Alex Riviera',
+            userAvatar: 'https://i.pravatar.cc/150?u=alex'
+          })
+
           resolve(projects[index])
         } else {
           reject(new Error('Project not found'))

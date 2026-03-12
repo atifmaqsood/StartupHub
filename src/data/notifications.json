@@ -1,16 +1,50 @@
 [
   {
-    "id": "n1",
+    "id": "1",
     "type": "project",
-    "message": "New project 'Mobile App V2' assigned to you",
-    "timestamp": "2026-03-12T14:30:00Z",
-    "read": false
+    "message": "Alex created project 'Marketing Dashboard'",
+    "entityId": "proj1",
+    "entityType": "Project",
+    "userId": "1",
+    "userName": "Alex Riviera",
+    "userAvatar": "https://i.pravatar.cc/150?u=alex",
+    "timestamp": "2024-03-12T10:00:00Z",
+    "isRead": false
   },
   {
-    "id": "n2",
+    "id": "2",
     "type": "task",
-    "message": "Task 'Implement Auth Logic' is overdue",
-    "timestamp": "2026-03-12T10:00:00Z",
-    "read": true
+    "message": "Sarah moved task 'Fix login bug' to Completed",
+    "entityId": "task1",
+    "entityType": "Task",
+    "userId": "2",
+    "userName": "Sarah Chen",
+    "userAvatar": "https://i.pravatar.cc/150?u=sarah",
+    "timestamp": "2024-03-12T11:30:00Z",
+    "isRead": false
+  },
+  {
+    "id": "3",
+    "type": "crm",
+    "message": "New lead 'Acme Corp' added from LinkedIn",
+    "entityId": "lead1",
+    "entityType": "Lead",
+    "userId": "system",
+    "userName": "System",
+    "userAvatar": "",
+    "timestamp": "2024-03-12T14:20:00Z",
+    "isRead": true
+  },
+  {
+    "id": "4",
+    "type": "team",
+    "message": "Alex invited Jordan to the team",
+    "entityId": "mem3",
+    "entityType": "Member",
+    "userId": "1",
+    "userName": "Alex Riviera",
+    "userAvatar": "https://i.pravatar.cc/150?u=alex",
+    "timestamp": "2024-03-12T15:45:00Z",
+    "isRead": true
   }
 ]
